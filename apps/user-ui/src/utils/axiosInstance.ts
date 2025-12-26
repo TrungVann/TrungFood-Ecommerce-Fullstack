@@ -11,8 +11,25 @@ let refreshSubscribers: (() => void)[] = [];
 
 // Handle logout and prevent infinite loops
 const handleLogout = () => {
-  const publicPaths = ["/", "/login", "/signup", "/forgot-password", "/products", "/offers", "/shops"];
+  const publicPaths = [
+    "/",
+    "/login",
+    "/signup",
+    "/forgot-password",
+    "/products",
+    "/offers",
+    "/shops",
+  ];
   const currentPath = window.location.pathname;
+
+  // Don't logout on payment-success page to prevent redirect loop
+  if (currentPath === "/payment-success") {
+    console.warn(
+      "Token expired on payment-success page, not logging out to prevent redirect loop"
+    );
+    return;
+  }
+
   if (!publicPaths.includes(currentPath)) {
     runRedirectToLogin();
   }
@@ -57,7 +74,9 @@ axiosInstance.interceptors.response.use(
 
       try {
         await axios.post(
-          `${process.env.NEXT_PUBLIC_SERVER_URI || "https://shondhane.com"}/auth/api/refresh-token`,
+          `${
+            process.env.NEXT_PUBLIC_SERVER_URI || "https://shondhane.com"
+          }/auth/api/refresh-token`,
           {},
           { withCredentials: true }
         );

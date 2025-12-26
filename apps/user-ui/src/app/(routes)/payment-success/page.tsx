@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { CheckCircle, Truck } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useAuthStore } from "apps/user-ui/src/store/authStore";
+import axios from "axios";
 import { useStore } from "apps/user-ui/src/store";
 import confetti from "canvas-confetti";
 
@@ -10,18 +12,61 @@ const PaymentSuccessPage = () => {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get("sessionId");
   const router = useRouter();
+  const [isRefreshing, setIsRefreshing] = useState(true);
+  const { setLoggedIn } = useAuthStore();
 
-  // Clear cart and trigger confetti
+  // Refresh token and clear cart
   useEffect(() => {
-    useStore.setState({ cart: [] });
+    const refreshAndSetup = async () => {
+      try {
+        // Refresh token to prevent logout
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_SERVER_URI}/auth/api/refresh-token`,
+          {},
+          { withCredentials: true }
+        );
+        console.log("Token refreshed successfully");
+        // Ensure user is marked as logged in
+        setLoggedIn(true);
+      } catch (error) {
+        console.error("Failed to refresh token:", error);
+        // If refresh fails, try to check if user is still logged in
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_SERVER_URI}/auth/api/logged-in-user`,
+            { withCredentials: true }
+          );
+          if (response.data?.user) {
+            setLoggedIn(true);
+          }
+        } catch (checkError) {
+          console.error("User not logged in:", checkError);
+        }
+      }
 
-    // Confetti burst
-    confetti({
-      particleCount: 120,
-      spread: 90,
-      origin: { y: 0.6 },
-    });
-  }, []);
+      // Clear cart
+      useStore.setState({ cart: [] });
+
+      // Confetti burst
+      confetti({
+        particleCount: 120,
+        spread: 90,
+        origin: { y: 0.6 },
+      });
+
+      setIsRefreshing(false);
+    };
+
+    refreshAndSetup();
+  }, [setLoggedIn]);
+
+  if (isRefreshing) {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-orange-500 border-t-transparent" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4">

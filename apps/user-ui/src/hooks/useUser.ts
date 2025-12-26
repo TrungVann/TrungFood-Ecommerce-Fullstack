@@ -7,7 +7,10 @@ import React from "react";
 // fetch user data from API
 const fetchUser = async () => {
   try {
-    const response = await axiosInstance.get("/auth/api/logged-in-user", isProtected);
+    const response = await axiosInstance.get(
+      "/auth/api/logged-in-user",
+      isProtected
+    );
     // Return null instead of undefined if user data is missing
     return response.data?.user || null;
   } catch (error) {
@@ -33,9 +36,15 @@ const useUser = () => {
 
   // Update auth state based on query results
   React.useEffect(() => {
+    const currentPath =
+      typeof window !== "undefined" ? window.location.pathname : "";
+
     if (user) {
       setLoggedIn(true);
-    } else if (isError || (!isLoggedIn && !isPending)) {
+    } else if (isError && currentPath !== "/payment-success") {
+      // Only logout if not on payment-success page
+      setLoggedIn(false);
+    } else if (!isLoggedIn && !isPending) {
       // If not logged in and not pending, ensure state is false
       setLoggedIn(false);
     }
