@@ -74,6 +74,8 @@ const Page = () => {
     } catch (error) {
       console.error("Logout error:", error);
     } finally {
+      // Clear auth storage
+      localStorage.removeItem("auth-storage");
       // Set logged in to false first to prevent query from running
       setLoggedIn(false);
       // Remove the user query data instead of invalidating to avoid refetch

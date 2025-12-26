@@ -30,6 +30,9 @@ const handleLogout = () => {
     return;
   }
 
+  // Clear auth storage on logout
+  localStorage.removeItem("auth-storage");
+
   if (!publicPaths.includes(currentPath)) {
     runRedirectToLogin();
   }

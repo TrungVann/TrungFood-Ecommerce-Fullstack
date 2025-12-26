@@ -1,3 +1,37 @@
+/**
+ * ============================================================
+ * AUTH CONTROLLER
+ * ============================================================
+ * File này chịu trách nhiệm xử lý toàn bộ logic liên quan đến:
+ * 1. Authentication & Authorization
+ * - User/ Admin/ Seller Login
+ * - JWT Access Token & Refresh Token
+ * - Cookie-based authentication (httpOnly)
+ *
+ * 2. Luồng hoạt động của OTP
+ * - Đăng ký tài khoản (User & Seller)
+ * - Quên mật khẩu
+ * - Chống spam OTP (rate limit)
+ *
+ * 3. Account Management
+ * - Update password
+ * - Logout
+ *
+ * 4. Seller & Shop
+ * - Register Seller
+ * - Create Shop
+ * - Stripe Connect onboarding
+ *
+ * 5. User Address
+ * - CRUD địa chỉ giao hàng
+ *
+ * Techstack:
+ * - Express + TypeScript
+ * - Prisma ORM
+ * - JWT (Access + Refresh)
+ * - Bcryptjs
+ * - Stripe Connect (Express Account)
+ */
 import { NextFunction, Request, Response } from "express";
 import {
   checkOtpRestrictions,
@@ -24,26 +58,41 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2022-11-15",
 });
 
-// Register a new user
+/**
+ * Register new user (Step 1 - Gửi OTP)
+ * 1. Validate dữ liệu đầu vào (name, email, password,...)
+ * 2. Kiểm tra user đã tồn tại chưa
+ * 3. Kiểm tra giới hạn OTP (anti-spam)
+ * 4. Track số lần request OTP
+ * 5. Gửi OTP qua email
+ */
 export const userRegistration = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
+    //Validate input theo schema user
     validateRegistrationData(req.body, "user");
+
     const { name, email } = req.body;
 
+    //Check user đã tồn tại chưa
     const existingUser = await prisma.users.findUnique({ where: { email } });
-
     if (existingUser) {
       return next(new ValidationError("User already exists with this email!"));
     }
 
+    //Chống spam OTP (rate limit theo email)
     await checkOtpRestrictions(email, next);
+
+    //Track số lần request OTP
     await trackOtpRequests(email, next);
+
+    //Gửi OTP qua email
     await sendOtp(name, email, "user-activation-mail");
 
+    //Ghi log phục vụ audit/debug
     sendLog({
       type: "info",
       message: `OTP requested for ${email}`,
@@ -58,7 +107,15 @@ export const userRegistration = async (
   }
 };
 
-// verify user with otp
+/**
+ * VerifyOTP & hoàn tất đăng ký user
+ * 1. Validate input (email, otp, password, name)
+ * 2. Kiểm tra user đã tồn tại chưa (tránh verify lại)
+ * 3. Verify OTP
+ * 4. Hash password
+ * 5. Nếu là user đầu tiên -> gán role = admin
+ * 6. Tạo user trong DB
+ */
 export const verifyUser = async (
   req: Request,
   res: Response,
@@ -76,11 +133,16 @@ export const verifyUser = async (
       return next(new ValidationError("User already exists with this email!"));
     }
 
+    //Verify OTP (throws error nếu sai/hết hạn)
     await verifyOtp(email, otp, next);
 
+    //Hash password trước khi lưu vào DB
     const hashedPassword = await bcrypt.hash(password, 10);
+
+    //Dùng để xác định user đầu tiên trong hệ thống
     const userCount = await prisma.users.count();
 
+    //Gửi log
     sendLog({
       type: "success",
       message: `New user verified & registered: ${email}`,
@@ -92,7 +154,7 @@ export const verifyUser = async (
         name,
         email,
         password: hashedPassword,
-        ...(userCount === 0 && { role: "admin" }), // assign role admin if it's the first user
+        ...(userCount === 0 && { role: "admin" }), //Nếu là user đầu tiên -> admin
       },
     });
 
@@ -105,7 +167,17 @@ export const verifyUser = async (
   }
 };
 
-// login user
+/**
+ * Login user
+ * 1. Validate email & password
+ * 2. Check user tồn tại
+ * 3. Compare password (bcrypt)
+ * 4. Generate JWT access & refresh token
+ * 5. Store token vào httpOnly cookie
+ * Security:
+ * - Access token: 15 phút
+ * - Refresh token: 7 ngày
+ */
 export const loginUser = async (
   req: Request,
   res: Response,
@@ -122,7 +194,7 @@ export const loginUser = async (
 
     if (!user) return next(new AuthError("User doesn't exists!"));
 
-    // verify password
+    //Verify password
     const isMatch = await bcrypt.compare(password, user.password!);
     if (!isMatch) {
       sendLog({
@@ -139,6 +211,7 @@ export const loginUser = async (
       source: "auth-service",
     });
 
+    //Clear seller token nếu user login
     res.clearCookie("seller-access-token");
     res.clearCookie("seller-refresh-token");
 
@@ -159,7 +232,7 @@ export const loginUser = async (
       }
     );
 
-    // store the refresh and access token in an httpOnly secure cookie
+    //Lưu token vào httpOnly cookie
     setCookie(res, "refresh_token", refreshToken);
     setCookie(res, "access_token", accessToken);
 
@@ -172,7 +245,10 @@ export const loginUser = async (
   }
 };
 
-// log out user
+/**
+ * Log out user
+ * Chỉ cần clear access_token và refresh_token
+ */
 export const logOutUser = async (req: any, res: Response) => {
   res.clearCookie("access_token");
   res.clearCookie("refresh_token");
@@ -182,7 +258,17 @@ export const logOutUser = async (req: any, res: Response) => {
   });
 };
 
-// update user password
+/**
+ * UPDATE PASSWORD
+ * Điều kiện:
+ * - có mật khẩu hiện tại
+ * - New password khác password cũ
+ * - New password phải trùng với confirm password
+ * Flow:
+ * 1. Verify current password
+ * 2. Hash password mới
+ * 3. Update DB
+ */
 export const updateUserPassword = async (
   req: any,
   res: Response,
@@ -237,7 +323,15 @@ export const updateUserPassword = async (
   }
 };
 
-// login admin
+/**
+ * LOGIN ADMIN
+ * Khác loginUser:
+ * - bắt buộc role là admin
+ * - nếu không phải admin -> từ chối
+ * Token:
+ * - Role: admin
+ * - Dùng chung cookie access_token/refresh_token
+ */
 export const loginAdmin = async (
   req: Request,
   res: Response,
@@ -310,7 +404,15 @@ export const loginAdmin = async (
   }
 };
 
-// refresh token
+/**
+ * Refresh access token (quan trọng)
+ * Áp dụng cho cả User, Admin & Seller
+ * 1. Lấy refresh token từ cookie hoặc authorization header
+ * 2. verify refresh token
+ * 3. Kiểm tra account còn tồn tại không
+ * 4. Generate access token mới
+ * 5. Set cookie tương ứng theo role
+ */
 export const refreshToken = async (
   req: any,
   res: Response,
@@ -388,7 +490,10 @@ export const getUser = async (req: any, res: Response, next: NextFunction) => {
   }
 };
 
-// get logged in admin
+/**
+ * GET ADMIN
+ * - trả data admin đang login
+ */
 export const getAdmin = async (req: any, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
@@ -476,11 +581,11 @@ export const registerSeller = async (
     validateRegistrationData(req.body, "seller");
     const { name, email } = req.body;
 
-    const exisitingSeller = await prisma.sellers.findUnique({
+    const existingSeller = await prisma.sellers.findUnique({
       where: { email },
     });
 
-    if (exisitingSeller) {
+    if (existingSeller) {
       throw new ValidationError("Seller already exists with this email!");
     }
 
@@ -832,7 +937,6 @@ export const getUserAddresses = async (
     next(error);
   }
 };
-
 
 // fetch layout data
 export const getLayoutData = async (
