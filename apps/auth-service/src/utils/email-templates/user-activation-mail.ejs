@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>TrungFood – Account Activation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #fdf3ea;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #333333;
+      }
+
+      table {
+        border-spacing: 0;
+      }
+
+      img {
+        border: 0;
+        display: block;
+      }
+
+      a {
+        text-decoration: none;
+      }
+
+      .wrapper {
+        width: 100%;
+        background-color: #fdf3ea;
+        padding: 40px 0;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #ffffff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      }
+
+      /* Header */
+      .header {
+        background: linear-gradient(135deg, #ff7a00, #ffa24c);
+        padding: 24px;
+        text-align: center;
+        color: #ffffff;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+      }
+
+      /* Body */
+      .content {
+        padding: 32px 28px;
+      }
+
+      .content p {
+        font-size: 16px;
+        line-height: 1.6;
+        margin: 0 0 16px;
+      }
+
+      .otp-box {
+        margin: 24px 0;
+        text-align: center;
+      }
+
+      .otp-code {
+        display: inline-block;
+        background-color: #fff3e8;
+        color: #ff7a00;
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 6px;
+        padding: 14px 28px;
+        border-radius: 8px;
+        border: 1px dashed #ffb066;
+      }
+
+      .note {
+        font-size: 14px;
+        color: #666666;
+      }
+
+      /* Footer */
+      .footer {
+        background-color: #fff7f0;
+        padding: 20px;
+        text-align: center;
+        font-size: 14px;
+        color: #777777;
+      }
+
+      .footer a {
+        color: #ff7a00;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <table class="container" align="center">
+        <!-- Header -->
+        <tr>
+          <td class="header">
+            <h1>TrungFood</h1>
+          </td>
+        </tr>
+
+        <!-- Body -->
+        <tr>
+          <td class="content">
+            <p>Xin chào <strong><%= name %></strong>,</p>
+
+            <p>
+              Cảm ơn bạn đã đăng ký tài khoản tại <strong>TrungFood</strong>. Để
+              kích hoạt tài khoản, vui lòng sử dụng mã xác thực bên dưới:
+            </p>
+
+            <div class="otp-box">
+              <div class="otp-code"><%= otp %></div>
+            </div>
+
+            <p class="note">
+              ⏱ Mã này có hiệu lực trong <strong>5 phút</strong>.
+            </p>
+
+            <p>
+              Nếu bạn không thực hiện đăng ký tài khoản TrungFood, vui lòng bỏ
+              qua email này.
+            </p>
+          </td>
+        </tr>
+
+        <!-- Footer -->
+        <tr>
+          <td class="footer">
+            <p>
+              Cần hỗ trợ? Liên hệ:
+              <a href="mailto:support@trungfood.com">support@trungfood.com</a>
+            </p>
+            <p>© 2025 TrungFood. All rights reserved.</p>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </body>
+</html>
