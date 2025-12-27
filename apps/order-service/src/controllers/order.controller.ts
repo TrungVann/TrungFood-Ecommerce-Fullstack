@@ -158,7 +158,7 @@ export const createPaymentSession = async (
 
     await redis.setex(
       `payment-session:${sessionId}`,
-      600, //10 minutes
+      3600, // 1 hour instead of 10 minutes
       JSON.stringify(sessionData)
     );
 
@@ -206,13 +206,17 @@ export const createOrder = async (
   res: Response,
   next: NextFunction
 ) => {
+  console.log("Webhook received:", req.body?.type || "unknown event");
+
   try {
     const stripeSignature = req.headers["stripe-signature"];
     if (!stripeSignature) {
+      console.error("Missing Stripe signature");
       return res.status(400).send("Missing Stripe signature");
     }
 
     const rawBody = (req as any).rawBody;
+    console.log("Raw body length:", rawBody?.length);
 
     let event;
     try {
@@ -221,6 +225,7 @@ export const createOrder = async (
         stripeSignature,
         process.env.STRIPE_WEBHOOK_SECRET!
       );
+      console.log("Event constructed:", event.type);
     } catch (err: any) {
       console.error("Webhook signature verification failed.", err.message);
       return res.status(400).send(`Webhook Error: ${err.message}`);
@@ -231,6 +236,8 @@ export const createOrder = async (
       const sessionId = paymentIntent.metadata.sessionId;
       const userId = paymentIntent.metadata.userId;
 
+      console.log("Payment succeeded for sessionId:", sessionId, "userId:", userId);
+
       const sessionKey = `payment-session:${sessionId}`;
       const sessionData = await redis.get(sessionKey);
 
@@ -240,6 +247,8 @@ export const createOrder = async (
           .status(200)
           .send("No session found, skipping order creation");
       }
+
+      console.log("Session data found, creating order...");
 
       const { cart, totalAmount, shippingAddressId, coupon } =
         JSON.parse(sessionData);
@@ -303,6 +312,8 @@ export const createOrder = async (
             },
           },
         });
+
+        console.log("Order created successfully:", order.id, "for shop:", shopId);
 
         // Update product & analytics
         for (const item of orderItems) {
@@ -417,6 +428,8 @@ export const createOrder = async (
 
         await redis.del(sessionKey);
       }
+
+      console.log("All orders created successfully for session:", sessionId);
     }
     res.status(200).json({ received: true });
   } catch (error) {

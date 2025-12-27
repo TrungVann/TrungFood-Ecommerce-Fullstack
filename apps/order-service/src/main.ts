@@ -32,7 +32,15 @@ app.get("/", (req, res) => {
   res.send({ message: "Welcome to order-service!" });
 });
 
-app.post("/webhook", express.raw({ type: "application/json" }), createOrder);
+app.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  (req, res, next) => {
+    (req as any).rawBody = req.body;
+    next();
+  },
+  createOrder
+);
 
 // Routes
 app.use("/api", router);
