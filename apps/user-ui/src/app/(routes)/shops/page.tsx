@@ -114,26 +114,6 @@ const Page = () => {
                 </li>
               ))}
             </ul>
-
-            {/* Countries */}
-            <h3 className="text-xl font-Poppins font-medium border-b border-b-slate-300 pb-1">
-              Countries
-            </h3>
-            <ul className="space-y-2 !mt-3">
-              {countries?.map((country: any) => (
-                <li key={country} className="flex items-center justify-between">
-                  <label className="flex items-center gap-3 text-sm text-gray-700 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={selectedCountries.includes(country)}
-                      onChange={() => toggleCountry(country)}
-                      className="accent-blue-600"
-                    />
-                    {country}
-                  </label>
-                </li>
-              ))}
-            </ul>
           </aside>
 
           {/* Shop Grid */}

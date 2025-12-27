@@ -62,7 +62,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   const prevImage = () => {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
-      setCurrentImage(productDetails?.images[currentIndex - 1]);
+      setCurrentImage(productDetails?.images[currentIndex - 1]?.url);
     }
   };
 
@@ -70,7 +70,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
   const nextImage = () => {
     if (currentIndex < productDetails?.images.length - 1) {
       setCurrentIndex(currentIndex + 1);
-      setCurrentImage(productDetails?.images[currentIndex + 1]);
+      setCurrentImage(productDetails?.images[currentIndex + 1]?.url);
     }
   };
 
@@ -141,14 +141,10 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 smallImage: {
                   alt: "product Image",
                   isFluidWidth: true,
-                  src:
-                    currentImage ||
-                    "https://ik.imagekit.io/fz0xzwtey/products/product-1741207782553-0_-RWfpGzfHt.jpg",
+                  src: currentImage,
                 },
                 largeImage: {
-                  src:
-                    currentImage ||
-                    "https://ik.imagekit.io/fz0xzwtey/products/product-1741207782553-0_-RWfpGzfHt.jpg",
+                  src: currentImage,
                   width: 1200,
                   height: 1200,
                 },
@@ -187,11 +183,13 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                   width={60}
                   height={60}
                   className={`cursor-pointer border rounded-lg p-1 ${
-                    currentImage === img ? "border-blue-500" : "border-gray-300"
+                    currentImage === img.url
+                      ? "border-blue-500"
+                      : "border-gray-300"
                   }`}
                   onClick={() => {
                     setCurrentIndex(index);
-                    setCurrentImage(img);
+                    setCurrentImage(img.url);
                   }}
                 />
               ))}

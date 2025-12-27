@@ -157,7 +157,12 @@ const ProductCard = ({
                 return;
               }
               if (!isInCart) {
-                addToCart({ ...product, quantity: 1 }, user, location, deviceInfo);
+                addToCart(
+                  { ...product, quantity: 1 },
+                  user,
+                  location,
+                  deviceInfo
+                );
               }
             }}
             className="cursor-pointer text-[#4b5563] hover:scale-110 transition"
@@ -165,7 +170,9 @@ const ProductCard = ({
         </div>
       </div>
 
-      {open && <ProductDetailsCard data={product} setOpen={setOpen} />}
+      {open && (
+        <ProductDetailsCard productDetails={product} setOpen={setOpen} />
+      )}
     </div>
   );
 };

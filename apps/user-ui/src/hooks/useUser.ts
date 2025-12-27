@@ -20,7 +20,13 @@ const fetchUser = async () => {
 };
 
 const useUser = () => {
-  const { setLoggedIn, isLoggedIn } = useAuthStore();
+  const {
+    setLoggedIn,
+    setUser,
+    user: storedUser,
+    logout,
+    isLoggedIn,
+  } = useAuthStore();
 
   const {
     data: user,
@@ -40,20 +46,26 @@ const useUser = () => {
       typeof window !== "undefined" ? window.location.pathname : "";
 
     if (user) {
-      setLoggedIn(true);
+      setUser(user);
     } else if (isError && currentPath !== "/payment-success") {
       // Only logout if not on payment-success page
-      setLoggedIn(false);
-    } else if (!isLoggedIn && !isPending) {
-      // If not logged in and not pending, ensure state is false
-      setLoggedIn(false);
+      logout();
     }
-  }, [user, isError, isLoggedIn, isPending, setLoggedIn]);
+  }, [user, isError, setUser, logout]);
 
-  // When isLoggedIn is false, we're not loading (query is disabled)
-  const isLoading = isLoggedIn ? isPending : false;
+  // If logged in but no stored user, fetch and store
+  React.useEffect(() => {
+    if (isLoggedIn && !storedUser && !isPending && !user) {
+      // Trigger fetch by enabling query
+    }
+  }, [isLoggedIn, storedUser, isPending, user]);
 
-  return { user: user as any, isLoading, isError };
+  // Return stored user if available, otherwise fetched user
+  return {
+    user: storedUser || user,
+    isLoading: isPending,
+    isError,
+  };
 };
 
 export default useUser;

@@ -13,14 +13,16 @@ import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
 import { isProtected } from "apps/user-ui/src/utils/protected";
 
 const ProductDetailsCard = ({
-  productDetails ,
+  productDetails,
   setOpen,
 }: {
   productDetails: any;
   setOpen: (open: boolean) => void;
 }) => {
   const [activeImage, setActiveImage] = useState(0);
-  const [isSizeSelected, setIsSizeSelected] = useState(productDetails?.sizes?.[0] || "");
+  const [isSizeSelected, setIsSizeSelected] = useState(
+    productDetails?.sizes?.[0] || ""
+  );
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -30,7 +32,9 @@ const ProductDetailsCard = ({
   const addToWishlist = useStore((state: any) => state.addToWishlist);
   const removeFromWishlist = useStore((state: any) => state.removeFromWishlist);
   const wishlist = useStore((state: any) => state.wishlist);
-  const isWishlisted = wishlist.some((item: any) => item.id === productDetails.id);
+  const isWishlisted = wishlist.some(
+    (item: any) => item.id === productDetails.id
+  );
   const { user } = useUser();
   const location = useLocationTracking();
   const deviceInfo = useDeviceTracking();
@@ -68,21 +72,27 @@ const ProductDetailsCard = ({
 
   return (
     <div
-      className="fixed flex items-center justify-center top-0 left-0 h-screen w-full bg-[#0000001d] z-50"
+      className="fixed flex items-center justify-center top-0 left-0 h-screen w-full bg-[#0000001d] z-50 p-100"
       onClick={() => setOpen(false)}
     >
       <div
-        className="w-[90%] md:w-[70%] md:mt-14 2xl:mt-0 h-max overflow-scroll min-h-[70vh] p-4 md:p-6 bg-white shadow-md rounded-lg"
+        className="w-[95%] max-w-5xl max-h-[90vh] overflow-y-auto p-12 md:p-10 bg-white shadow-lg rounded-lg relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="w-full flex flex-col md:flex-row">
-          <div className="w-full md:w-1/2 h-full">
+        <button
+          className="absolute top-4 right-4 cursor-pointer bg-gray-200 hover:bg-gray-300 rounded-full p-1"
+          onClick={() => setOpen(false)}
+        >
+          <X size={20} />
+        </button>
+        <div className="w-full flex flex-col lg:flex-row gap-6">
+          <div className="w-full lg:w-1/2">
             <Image
               src={productDetails?.images?.[activeImage]?.url}
               alt={productDetails?.images?.[activeImage].url}
               width={400}
               height={400}
-              className="w-full rounded-lg object-contain"
+              className="w-96 h-96 rounded-lg object-contain mx-auto"
             />
             {/* Thumbnails */}
             <div className="flex gap-2 mt-4">
@@ -108,7 +118,7 @@ const ProductDetailsCard = ({
             </div>
           </div>
 
-          <div className="w-full md:w-1/2 md:pl-8 mt-6 md:mt-0">
+          <div className="w-full lg:w-1/2">
             {/* Seller Info */}
             <div className="border-b relative pb-3 border-gray-200 flex items-center justify-between">
               <div className="flex items-start gap-3">
@@ -149,12 +159,10 @@ const ProductDetailsCard = ({
               >
                 💬 Chat with Seller
               </button>
-
-              <button className="w-full absolute cursor-pointer right-[-5px] top-[-5px] flex justify-end my-2 mt-[-10px]">
-                <X size={25} onClick={() => setOpen(false)} />
-              </button>
             </div>
-            <h3 className="text-xl font-semibold mt-3">{productDetails?.title}</h3>
+            <h3 className="text-xl font-semibold mt-3">
+              {productDetails?.title}
+            </h3>
             <p className="mt-2 text-gray-700 whitespace-pre-wrap w-full">
               {productDetails?.short_description}{" "}
             </p>
@@ -253,7 +261,12 @@ const ProductDetailsCard = ({
                       return;
                     }
                     isWishlisted
-                      ? removeFromWishlist(productDetails.id, user, location, deviceInfo)
+                      ? removeFromWishlist(
+                          productDetails.id,
+                          user,
+                          location,
+                          deviceInfo
+                        )
                       : addToWishlist(
                           {
                             ...productDetails,
@@ -271,7 +284,7 @@ const ProductDetailsCard = ({
               </button>
             </div>
             <div className="mt-3">
-              {productDetails.stock > 0 ? (
+              {productDetails?.stock > 0 ? (
                 <span className="text-green-600 font-semibold">In Stock</span>
               ) : (
                 <span className="text-red-600 font-semibold">Out of Stock</span>

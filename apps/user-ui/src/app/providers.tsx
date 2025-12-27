@@ -19,9 +19,9 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
   );
 
   // Clear auth storage on app start to prevent stale sessions
-  useEffect(() => {
-    localStorage.removeItem("auth-storage");
-  }, []);
+  // useEffect(() => {
+  //   localStorage.removeItem("auth-storage");
+  // }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -38,7 +38,7 @@ const ProvidersWithWebSocket = ({
 }) => {
   const { user, isLoading } = useUser();
 
-  if (isLoading) return null;
+  // if (isLoading) return null;
 
   return (
     <>
