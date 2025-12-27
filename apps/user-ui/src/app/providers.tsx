@@ -1,6 +1,6 @@
 "use client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Toaster } from "sonner";
 import useUser from "../hooks/useUser";
 import { WebSocketProvider } from "../context/web-socket-context";
@@ -17,6 +17,11 @@ const Providers = ({ children }: { children: React.ReactNode }) => {
         },
       })
   );
+
+  // Clear auth storage on app start to prevent stale sessions
+  useEffect(() => {
+    localStorage.removeItem("auth-storage");
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

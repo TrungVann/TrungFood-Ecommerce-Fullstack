@@ -21,8 +21,20 @@ export const newConversation = async (
     const { sellerId } = req.body;
     const userId = req.user.id;
 
+    console.log("Creating conversation for user:", userId, "seller:", sellerId);
+
     if (!sellerId) {
       return next(new ValidationError("Seller Id is required!"));
+    }
+
+    // Check if seller exists
+    const seller = await prisma.sellers.findUnique({
+      where: { id: sellerId },
+    });
+
+    if (!seller) {
+      console.log("Seller not found:", sellerId);
+      return next(new NotFoundError("Seller not found!"));
     }
 
     // Directly check if a conversationGroup already exists for this user + seller
@@ -42,25 +54,29 @@ export const newConversation = async (
     }
 
     // Create conversation + participants
-    const newGroup = await prisma.conversationGroup.create({
-      data: {
-        isGroup: false,
-        creatorId: userId,
-        participantIds: [userId, sellerId],
-      },
-    });
+    const newGroup = await prisma.$transaction(async (tx) => {
+      const group = await tx.conversationGroup.create({
+        data: {
+          isGroup: false,
+          creatorId: userId,
+          participantIds: [userId, sellerId],
+        },
+      });
 
-    await prisma.participant.createMany({
-      data: [
-        {
-          conversationId: newGroup.id,
-          userId,
-        },
-        {
-          conversationId: newGroup.id,
-          sellerId,
-        },
-      ],
+      await tx.participant.createMany({
+        data: [
+          {
+            conversationId: group.id,
+            userId,
+          },
+          {
+            conversationId: group.id,
+            sellerId,
+          },
+        ],
+      });
+
+      return group;
     });
 
     return res.status(201).json({ conversation: newGroup, isNew: true });

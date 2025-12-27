@@ -11,16 +11,30 @@ import useUser from "apps/user-ui/src/hooks/useUser";
 import Image from "next/image";
 import { useStore } from "apps/user-ui/src/store";
 import useLayout from "apps/user-ui/src/hooks/useLayout";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const { user, isLoading } = useUser();
   const wishlist = useStore((state: any) => state.wishlist);
   const cart = useStore((state: any) => state.cart);
   const { layout } = useLayout();
+  const router = useRouter();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await axiosInstance.get("/auth/api/logout-user");
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      // Clear local storage and redirect
+      localStorage.removeItem("auth-storage");
+      router.push("/login");
+    }
+  };
 
   const handleSearchClick = async () => {
     if (!searchQuery.trim()) return;
@@ -111,12 +125,14 @@ const Header = () => {
                     <ProfileIcon />
                   </Link>
                 </div>
-                <Link href={"/profile"}>
-                  <span className="block font-medium">Hello,</span>
-                  <span className="font-semibold">
-                    {user?.name?.split(" ")[0]}
-                  </span>
-                </Link>
+                <div className="flex flex-col">
+                  <Link href={"/profile"}>
+                    <span className="block font-medium">Hello,</span>
+                    <span className="font-semibold">
+                      {user?.name?.split(" ")[0]}
+                    </span>
+                  </Link>
+                </div>
               </>
             ) : (
               <>

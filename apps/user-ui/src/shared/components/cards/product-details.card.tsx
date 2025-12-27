@@ -13,25 +13,24 @@ import axiosInstance from "apps/user-ui/src/utils/axiosInstance";
 import { isProtected } from "apps/user-ui/src/utils/protected";
 
 const ProductDetailsCard = ({
-  data,
+  productDetails ,
   setOpen,
 }: {
-  data: any;
+  productDetails: any;
   setOpen: (open: boolean) => void;
 }) => {
   const [activeImage, setActiveImage] = useState(0);
-  const [isSelected, setIsSelected] = useState(data?.colors?.[0] || "");
-  const [isSizeSelected, setIsSizeSelected] = useState(data?.sizes?.[0] || "");
+  const [isSizeSelected, setIsSizeSelected] = useState(productDetails?.sizes?.[0] || "");
   const [quantity, setQuantity] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
   const addToCart = useStore((state: any) => state.addToCart);
   const cart = useStore((state: any) => state.cart);
-  const isInCart = cart.some((item: any) => item.id === data.id);
+  const isInCart = cart.some((item: any) => item.id === productDetails.id);
   const addToWishlist = useStore((state: any) => state.addToWishlist);
   const removeFromWishlist = useStore((state: any) => state.removeFromWishlist);
   const wishlist = useStore((state: any) => state.wishlist);
-  const isWishlisted = wishlist.some((item: any) => item.id === data.id);
+  const isWishlisted = wishlist.some((item: any) => item.id === productDetails.id);
   const { user } = useUser();
   const location = useLocationTracking();
   const deviceInfo = useDeviceTracking();
@@ -55,12 +54,13 @@ const ProductDetailsCard = ({
     try {
       const res = await axiosInstance.post(
         "/chatting/api/create-user-conversationGroup",
-        { sellerId: data?.Shop?.sellerId },
+        { sellerId: productDetails?.Shop?.sellerId },
         isProtected
       );
+      console.log("Conversation created:", res.data);
       router.push(`/inbox?conversationId=${res.data.conversation.id}`);
     } catch (error) {
-      console.log(error);
+      console.error("Error creating conversation:", error);
     } finally {
       setIsLoading(false);
     }
@@ -78,15 +78,15 @@ const ProductDetailsCard = ({
         <div className="w-full flex flex-col md:flex-row">
           <div className="w-full md:w-1/2 h-full">
             <Image
-              src={data?.images?.[activeImage]?.url}
-              alt={data?.images?.[activeImage].url}
+              src={productDetails?.images?.[activeImage]?.url}
+              alt={productDetails?.images?.[activeImage].url}
               width={400}
               height={400}
               className="w-full rounded-lg object-contain"
             />
             {/* Thumbnails */}
             <div className="flex gap-2 mt-4">
-              {data?.images?.map((img: any, index: number) => (
+              {productDetails?.images?.map((img: any, index: number) => (
                 <div
                   key={index}
                   className={`cursor-pointer border rounded-md ${
@@ -114,7 +114,7 @@ const ProductDetailsCard = ({
               <div className="flex items-start gap-3">
                 {/* Shop Logo */}
                 <Image
-                  src={data?.Shop?.avatar}
+                  src={productDetails?.Shop?.avatar}
                   alt="Shop Logo"
                   width={60}
                   height={60}
@@ -123,21 +123,21 @@ const ProductDetailsCard = ({
 
                 <div>
                   <Link
-                    href={`/shop/${data?.Shop?.id}`}
+                    href={`/shop/${productDetails?.Shop?.id}`}
                     className="text-lg font-medium"
                   >
-                    {data?.Shop?.name}
+                    {productDetails?.Shop?.name}
                   </Link>
 
                   {/* Shop Ratings */}
                   <span className="block mt-1">
-                    <Ratings rating={data?.Shop?.ratings} />
+                    <Ratings rating={productDetails?.Shop?.ratings} />
                   </span>
 
                   {/* Shop Location */}
                   <p className="text-gray-600 mt-1 flex items-center gap-1 text-sm">
                     <MapPin size={20} />{" "}
-                    {data?.Shop?.address || "Location Not Available"}
+                    {productDetails?.Shop?.address || "Location Not Available"}
                   </p>
                 </div>
               </div>
@@ -154,44 +154,24 @@ const ProductDetailsCard = ({
                 <X size={25} onClick={() => setOpen(false)} />
               </button>
             </div>
-            <h3 className="text-xl font-semibold mt-3">{data?.title}</h3>
+            <h3 className="text-xl font-semibold mt-3">{productDetails?.title}</h3>
             <p className="mt-2 text-gray-700 whitespace-pre-wrap w-full">
-              {data?.short_description}{" "}
+              {productDetails?.short_description}{" "}
             </p>
             {/* Brand */}
-            {data?.brand && (
+            {productDetails?.brand && (
               <p className="mt-2">
-                <strong>Brand:</strong> {data.brand}
+                <strong>Brand:</strong> {productDetails.brand}
               </p>
             )}
             {/* Color & Size Selection */}
             <div className="flex flex-col md:flex-row items-start gap-5 mt-4">
-              {/* Color Options */}
-              {data?.colors?.length > 0 && (
-                <div>
-                  <strong>Color:</strong>
-                  <div className="flex gap-2 mt-1">
-                    {data.colors.map((color: string, index: number) => (
-                      <button
-                        key={index}
-                        className={`w-8 h-8 cursor-pointer rounded-full border-2 transition ${
-                          isSelected === color
-                            ? "border-gray-400 scale-110 shadow-md"
-                            : "border-transparent"
-                        }`}
-                        onClick={() => setIsSelected(color)}
-                        style={{ backgroundColor: color }}
-                      ></button>
-                    ))}
-                  </div>
-                </div>
-              )}
               {/* Size Options */}
-              {data?.sizes?.length > 0 && (
+              {productDetails?.sizes?.length > 0 && (
                 <div>
                   <strong>Size:</strong>
                   <div className="flex gap-2 mt-1">
-                    {data.sizes.map((size: string, index: number) => (
+                    {productDetails.sizes.map((size: string, index: number) => (
                       <button
                         key={index}
                         className={`px-4 py-1 cursor-pointer rounded-md transition ${
@@ -211,11 +191,11 @@ const ProductDetailsCard = ({
             {/* Price Section */}
             <div className="mt-5 flex items-center gap-4">
               <h3 className="text-2xl font-semibold text-gray-900">
-                ${data?.sale_price}
+                ${productDetails?.sale_price}
               </h3>
-              {data?.regular_price && (
+              {productDetails?.regular_price && (
                 <h3 className="text-lg text-red-600 line-through">
-                  ${data.regular_price}
+                  ${productDetails.regular_price}
                 </h3>
               )}
             </div>
@@ -244,10 +224,9 @@ const ProductDetailsCard = ({
                   }
                   addToCart(
                     {
-                      ...data,
+                      ...productDetails,
                       quantity,
                       selectedOptions: {
-                        color: isSelected,
                         size: isSizeSelected,
                       },
                     },
@@ -274,13 +253,12 @@ const ProductDetailsCard = ({
                       return;
                     }
                     isWishlisted
-                      ? removeFromWishlist(data.id, user, location, deviceInfo)
+                      ? removeFromWishlist(productDetails.id, user, location, deviceInfo)
                       : addToWishlist(
                           {
-                            ...data,
+                            ...productDetails,
                             quantity,
                             selectedOptions: {
-                              color: isSelected,
                               size: isSizeSelected,
                             },
                           },
@@ -293,7 +271,7 @@ const ProductDetailsCard = ({
               </button>
             </div>
             <div className="mt-3">
-              {data.stock > 0 ? (
+              {productDetails.stock > 0 ? (
                 <span className="text-green-600 font-semibold">In Stock</span>
               ) : (
                 <span className="text-red-600 font-semibold">Out of Stock</span>

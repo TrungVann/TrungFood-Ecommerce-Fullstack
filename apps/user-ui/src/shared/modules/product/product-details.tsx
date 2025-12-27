@@ -112,15 +112,18 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
     }
     setIsChatLoading(true);
 
+    console.log("Starting chat with sellerId:", productDetails?.Shop?.sellerId);
+
     try {
       const res = await axiosInstance.post(
         "/chatting/api/create-user-conversationGroup",
         { sellerId: productDetails?.Shop?.sellerId },
         isProtected
       );
+      console.log("Conversation created:", res.data);
       router.push(`/inbox?conversationId=${res.data.conversation.id}`);
     } catch (error) {
-      console.log(error);
+      console.error("Error creating conversation:", error);
     } finally {
       setIsChatLoading(false);
     }

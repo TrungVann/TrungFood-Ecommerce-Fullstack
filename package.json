@@ -21,7 +21,9 @@
     "docker:run": "bash scripts/local-production.sh --run-only",
     "docker:stop": "bash scripts/local-production.sh --stop",
     "docker:clean": "bash scripts/local-production.sh --clean",
-    "docker:logs": "bash scripts/local-production.sh --logs"
+    "docker:logs": "bash scripts/local-production.sh --logs",
+    "prisma:generate": "prisma generate",
+    "prisma:generate": "prisma generate"
   },
   "private": true,
   "dependencies": {
