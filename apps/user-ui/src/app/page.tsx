@@ -90,7 +90,7 @@ const Page = () => {
         )}
 
         {products?.length === 0 && (
-          <p className="text-center">No Products available yet!</p>
+          <p className="text-center">Hiện tại không có sản phẩm!</p>
         )}
 
         {isLoading && (

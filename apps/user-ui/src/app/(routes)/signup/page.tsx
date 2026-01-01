@@ -113,40 +113,31 @@ const Signup = () => {
   return (
     <div className="w-full py-10 min-h-[85vh] bg-[#f1f1f1]">
       <h1 className="text-4xl font-Poppins font-semibold text-black text-center">
-        Signup
+        Đăng ký
       </h1>
       <p className="text-center text-lg font-medium py-3 text-[#00000099]">
-        Home . Signup
+        Trang chủ . Đăng ký
       </p>
 
       <div className="w-full flex justify-center">
         <div className="md:w-[480px] p-8 bg-white shadow rounded-lg">
-          <h3 className="text-3xl font-semibold text-center mb-2">
-            Signup to TrungFood
-          </h3>
+          <h3 className="text-3xl font-semibold text-center mb-2">Đăng ký</h3>
           <p className="text-center text-gray-500 mb-4">
-            Already have an account?{" "}
+            Bạn đã có tài khoản?{" "}
             <Link href={"/login"} className="text-[#FF541B]">
-              Login
+              Đăng nhập
             </Link>
           </p>
 
-          <GoogleButton />
-          <div className="flex items-center my-5 text-gray-400 text-sm">
-            <div className="flex-1 border-t border-gray-300" />
-            <span className="px-3">or Sign in with Email</span>
-            <div className="flex-1 border-t border-gray-300" />
-          </div>
-
           {!showOtp ? (
             <form onSubmit={handleSubmit(onSubmit)}>
-              <label className="block text-gray-700 mb-1">Name</label>
+              <label className="block text-gray-700 mb-1">Tên</label>
               <input
                 type="text"
                 placeholder="Nguyen Van Trung"
                 className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
                 {...register("name", {
-                  required: "Name is required",
+                  required: "Tên không được để trống",
                 })}
               />
               {errors.email && (
@@ -161,10 +152,10 @@ const Signup = () => {
                 placeholder="abcxyc@gmail.com"
                 className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
                 {...register("email", {
-                  required: "Email is required",
+                  required: "Email không được để trống",
                   pattern: {
                     value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                    message: "Invalid email address",
+                    message: "Email không hợp lệ",
                   },
                 })}
               />
@@ -174,17 +165,17 @@ const Signup = () => {
                 </p>
               )}
 
-              <label className="block text-gray-700 mb-1">Password</label>
+              <label className="block text-gray-700 mb-1">Mật khẩu</label>
               <div className="relative">
                 <input
                   type={passwordVisible ? "text" : "password"}
                   placeholder="Min. 6 characters"
                   className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
                   {...register("password", {
-                    required: "Password is required",
+                    required: "Mật khẩu không được để trống",
                     minLength: {
                       value: 6,
-                      message: "Password must be at least 6 characters",
+                      message: "Mật khẩu phải có ít nhất 6 ký tự",
                     },
                   })}
                 />
@@ -208,13 +199,13 @@ const Signup = () => {
                 disabled={signupMutation.isPending}
                 className="w-full text-lg cursor-pointer mt-4 bg-[#FF541B] text-white py-2 rounded-lg"
               >
-                {signupMutation.isPending ? " Signing up..." : "Signup"}
+                {signupMutation.isPending ? " Đang đăng ký..." : "Đăng ký"}
               </button>
             </form>
           ) : (
             <div>
               <h3 className="text-xl font-semibold text-center mb-4">
-                Enter OTP
+                Nhập OTP
               </h3>
               <div className="flex justify-center gap-6">
                 {otp?.map((digit, index) => (
@@ -237,7 +228,9 @@ const Signup = () => {
                 disabled={verifyOtpMutation.isPending}
                 onClick={() => verifyOtpMutation.mutate()}
               >
-                {verifyOtpMutation.isPending ? "Verifying..." : "Verify OTP"}
+                {verifyOtpMutation.isPending
+                  ? "Đang xác minh..."
+                  : "Xác minh OTP"}
               </button>
               <p className="text-center text-sm mt-4">
                 {canResend ? (
@@ -245,10 +238,10 @@ const Signup = () => {
                     onClick={resendOtp}
                     className="text-blue-500 cursor-pointer"
                   >
-                    Resend OTP
+                    Gửi lại OTP
                   </button>
                 ) : (
-                  `Resend OTP in ${timer}s`
+                  `Gửi lại OTP trong ${timer}s`
                 )}
               </p>
               {verifyOtpMutation?.isError &&

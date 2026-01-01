@@ -25,7 +25,11 @@ const Page = () => {
     getValues,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      slug: "",
+    },
+  });
 
   const { onChange: formOnChange, ...restSlugProps } = register("slug", {
     required: "Slug is required!",

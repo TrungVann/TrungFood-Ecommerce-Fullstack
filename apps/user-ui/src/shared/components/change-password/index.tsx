@@ -58,27 +58,27 @@ const ChangePassword = () => {
         {/* New Password */}
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700">
-            New Password
+            Mật khẩu mới
           </label>
           <input
             type="password"
             {...register("newPassword", {
-              required: "New password is required",
+              required: "Mật khẩu mới không được để trống",
               minLength: {
                 value: 8,
-                message: "Must be at least 8 characters",
+                message: "Mật khẩu mới phải có ít nhất 8 ký tự",
               },
               validate: {
                 hasLower: (value) =>
-                  /[a-z]/.test(value) || "Must include a lowercase letter",
+                  /[a-z]/.test(value) || "Phải bao gồm một chữ cái thường",
                 hasUpper: (value) =>
-                  /[A-Z]/.test(value) || "Must include an uppercase letter",
+                  /[A-Z]/.test(value) || "Phải bao gồm một chữ cái viết hoa",
                 hasNumber: (value) =>
-                  /\d/.test(value) || "Must include a number",
+                  /\d/.test(value) || "Phải bao gồm một chữ số",
               },
             })}
             className="form-input"
-            placeholder="Enter new password"
+            placeholder="Nhập mật khẩu mới"
           />
           {errors.newPassword?.message && (
             <p className="text-red-500 text-xs mt-1">
@@ -90,17 +90,18 @@ const ChangePassword = () => {
         {/* Confirm Password */}
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700">
-            Confirm Password
+            Xác nhận mật khẩu mới
           </label>
           <input
             type="password"
             {...register("confirmPassword", {
-              required: "Confirm your password",
+              required: "Xác nhận mật khẩu mới",
               validate: (value) =>
-                value === watch("newPassword") || "Passwords do not match",
+                value === watch("newPassword") ||
+                "Mật khẩu mới không trùng khớp",
             })}
             className="form-input"
-            placeholder="Re-enter new password"
+            placeholder="Nhập lại mật khẩu mới"
           />
           {errors.confirmPassword?.message && (
             <p className="text-red-500 text-xs mt-1">
@@ -112,9 +113,9 @@ const ChangePassword = () => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full mt-1 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition text-sm"
+          className="w-full mt-1 bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600 transition text-sm"
         >
-          {isSubmitting ? "Updating..." : "Update Password"}
+          {isSubmitting ? "Đang cập nhật..." : "Cập nhật mật khẩu"}
         </button>
       </form>
 

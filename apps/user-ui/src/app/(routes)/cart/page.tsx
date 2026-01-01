@@ -62,7 +62,7 @@ const CartPage = () => {
 
   const createPaymentSession = async () => {
     if (addresses?.length === 0) {
-      toast.error("Please set your delivery address to create an order!");
+      toast.error("Hãy đặt địa chị giao hàng của bạn trước khi đặt hàng!");
       return;
     }
     console.log("Cart data before sending:", cart);
@@ -152,13 +152,13 @@ const CartPage = () => {
       <div className="md:w-[80%] w-[95%] mx-auto min-h-screen">
         <div className="pb-[50px]">
           <h1 className="md:pt-[50px] font-medium text-[44px] leading-[1] mb-[16px] font-jost">
-            Shopping Cart
+            Giỏ hàng
           </h1>
           <Link href={"/"} className="text-[#55585b] hover:underline">
-            Home
+            Trang chủ
           </Link>
           <span className="inline-block p-[1.5px] mx-1 bg-[#a8acb0] rounded-full"></span>
-          <span className="text-[#55585b]">Cart</span>
+          <span className="text-[#55585b]">Giỏ hàng</span>
         </div>
 
         {cart.length === 0 ? (
@@ -176,9 +176,9 @@ const CartPage = () => {
             <table className="w-full lg:w-[70%] border-collapse">
               <thead className="bg-[#f1f3f4] rounded">
                 <tr>
-                  <th className="py-3 text-left pl-6 align-middle">Product</th>
-                  <th className="py-3 text-center align-middle">Price</th>
-                  <th className="py-3 text-center align-middle">Quantity</th>
+                  <th className="py-3 text-left pl-6 align-middle">Sản phẩm</th>
+                  <th className="py-3 text-center align-middle">Giá</th>
+                  <th className="py-3 text-center align-middle">Số lượng</th>
                   <th className="py-3 text-center align-middle"></th>
                 </tr>
               </thead>
@@ -197,24 +197,9 @@ const CartPage = () => {
                         <span className="font-medium">{item.title}</span>
                         {item?.selectedOptions && (
                           <div className="text-sm text-gray-500">
-                            {item?.selectedOptions?.color && (
-                              <span>
-                                Color: {}
-                                <span
-                                  style={{
-                                    backgroundColor:
-                                      item?.selectedOptions?.color,
-                                    width: "12px",
-                                    height: "12px",
-                                    borderRadius: "100%",
-                                    display: "inline-block",
-                                  }}
-                                />
-                              </span>
-                            )}
                             {item?.selectedOptions.size && (
                               <span className="ml-2">
-                                Size: {item?.selectedOptions?.size}
+                                Kích thước: {item?.selectedOptions?.size}
                               </span>
                             )}
                           </div>
@@ -285,28 +270,28 @@ const CartPage = () => {
               )}
 
               <div className="flex justify-between items-center text-[#010f1c] text-[20px] font-[550] pb-3">
-                <span className="font-jost">Subtotal</span>
+                <span className="font-jost">Tổng tiền</span>
                 <span>${(subtotal - discountAmount).toFixed(2)}</span>
               </div>
               <hr className="my-4 text-slate-200" />
 
               <div className="mb-4">
                 <h4 className="mb-[7px] font-[500] text-[15px]">
-                  Have a Coupon?
+                  Có mã giảm giá?
                 </h4>
                 <div className="flex">
                   <input
                     type="text"
                     value={couponCode}
                     onChange={(e: any) => setCouponCode(e.target.value)}
-                    placeholder="Enter coupon code"
+                    placeholder="Nhập mã giảm giá"
                     className="w-full p-2 border border-gray-200 rounded-l-md focus:outline-none focus:border-blue-500"
                   />
                   <button
                     className="bg-orange-500 cursor-pointer text-white px-4 rounded-r-md hover:bg-orange-600 transition-all"
                     onClick={() => couponCodeApplyHandler()}
                   >
-                    Apply
+                    Áp dụng
                   </button>
                 </div>
                 {error && <p className="text-sm pt-2 text-red-500">{error}</p>}
@@ -314,7 +299,7 @@ const CartPage = () => {
 
                 <div className="mb-4">
                   <h4 className="mb-[7px] font-medium text-[15px]">
-                    Select Shipping Address
+                    Chọn địa chỉ giao hàng của bạn
                   </h4>
                   {addresses?.length !== 0 && (
                     <select
@@ -333,7 +318,8 @@ const CartPage = () => {
                   )}
                   {addresses?.length === 0 && (
                     <p className="text-sm text-slate-800">
-                      Please add an address from profile to create an order!
+                      Hãy thêm địa chỉ giao hàng trong tài khoản của bạn trước
+                      khi đặt hàng!
                     </p>
                   )}
                 </div>
@@ -341,17 +327,19 @@ const CartPage = () => {
 
                 <div className="mb-4">
                   <h4 className="mb-[7px] font-[500] text-[15px]">
-                    Select Payment Method
+                    Chọn hình thức thanh toán
                   </h4>
                   <select className="w-full p-2 border border-gray-200 rounded-md focus:outline-none focus:border-blue-500">
-                    <option value="credit_card">Online Payment</option>
-                    <option value="cash_on_delivery">Cash on Delivery</option>
+                    <option value="credit_card">Thanh toán trực tuyến</option>
+                    <option value="cash_on_delivery">
+                      Thanh toán khi nhận hàng
+                    </option>
                   </select>
                 </div>
                 <hr className="my-4 text-slate-200" />
 
                 <div className="flex justify-between items-center text-[#010f1c] text-[20px] font-[550] pb-3">
-                  <span className="font-jost">Total</span>
+                  <span className="font-jost">Tổng</span>
                   <span>${(subtotal - discountAmount).toFixed(2)}</span>
                 </div>
 
@@ -361,7 +349,7 @@ const CartPage = () => {
                   className="w-full flex items-center justify-center gap-2 cursor-pointer mt-4 py-3 bg-orange-500 text-white hover:bg-orange-600 transition-all rounded-lg"
                 >
                   {loading && <Loader2 className="animate-spin w-5 h-5" />}
-                  {loading ? "Redirecting..." : "Proceed to Checkout"}
+                  {loading ? "Đang chuyển hướng..." : "Tiến hành thanh toán"}
                 </button>
               </div>
             </div>

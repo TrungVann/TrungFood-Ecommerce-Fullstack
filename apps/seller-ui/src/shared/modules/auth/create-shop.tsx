@@ -42,16 +42,16 @@ const CreateShop = ({
     <div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <h3 className="text-2xl font-semibold text-center mb-4">
-          Setup new shop
+          Thiết lập cửa hàng
         </h3>
 
         <label className="block text-gray-700 mb-1">Name *</label>
         <input
           type="text"
-          placeholder="shop name"
+          placeholder="Tên cửa hàng"
           className="w-full p-2 border border-gray-300 outline-0 rounded-[4px] mb-1"
           {...register("name", {
-            required: "Name is required",
+            required: "Tên là bắt buộc",
           })}
         />
         {errors.name && (
@@ -59,29 +59,30 @@ const CreateShop = ({
         )}
 
         <label className="block text-gray-700 mb-1">
-          Bio (Max 100 words) *
+          Giới thiệu cửa hàng (Tối đa 100 từ) *
         </label>
         <input
           type="text"
           placeholder="shop bio"
           className="w-full p-2 border border-gray-300 outline-0 rounded-[4px] mb-1"
           {...register("bio", {
-            required: "Bio is required",
+            required: "Giới thiệu không được để trống",
             validate: (value) =>
-              countWords(value) <= 100 || "Bio can't exceed 100 words",
+              countWords(value) <= 100 ||
+              "Giới thiệu không thể nhiều hơn 100 ký tự",
           })}
         />
         {errors.bio && (
           <p className="text-red-500 text-sm">{String(errors.bio.message)}</p>
         )}
 
-        <label className="block text-gray-700 mb-1">Address *</label>
+        <label className="block text-gray-700 mb-1">Địa chỉ *</label>
         <input
           type="text"
-          placeholder="shop location"
+          placeholder="Địa chỉ cửa hàng"
           className="w-full p-2 border border-gray-300 outline-0 rounded-[4px] mb-1"
           {...register("address", {
-            required: "Shop Address is required",
+            required: "Địa chỉ cửa hàng không được để trống",
           })}
         />
         {errors.address && (
@@ -90,13 +91,13 @@ const CreateShop = ({
           </p>
         )}
 
-        <label className="block text-gray-700 mb-1">Opening Hours *</label>
+        <label className="block text-gray-700 mb-1">Giờ mở cửa *</label>
         <input
           type="text"
-          placeholder="e.g., Mon-Fri 9AM - 6PM"
+          placeholder="e.g., Thứ 2-Thứ 6 9AM - 6PM"
           className="w-full p-2 border border-gray-300 outline-0 rounded-[4px] mb-1"
           {...register("opening_hours", {
-            required: "Opening hours are required",
+            required: "Giờ mở cửa hàng không được để trống",
           })}
         />
         {errors.opening_hours && (
@@ -113,7 +114,7 @@ const CreateShop = ({
           {...register("website", {
             pattern: {
               value: /^(https?:\/\/)?([\w\d-]+\.)+\w{2,}(\/.*)?$/,
-              message: "Enter a valid URL",
+              message: "địa chỉ URL không hợp lệ",
             },
           })}
         />
@@ -123,12 +124,12 @@ const CreateShop = ({
           </p>
         )}
 
-        <label className="block text-gray-700 mb-1">Category *</label>
+        <label className="block text-gray-700 mb-1">Danh mục *</label>
         <select
           className="w-full p-2 border border-gray-300 outline-0 rounded-[4px] mb-1"
-          {...register("category", { required: "Category is required" })}
+          {...register("category", { required: "Danh mục là bắt buộc" })}
         >
-          <option value="">Select a category</option>
+          <option value="">Chọn một danh mục</option>
           {shopCategories.map((category) => (
             <option key={category.value} value={category.value}>
               {category.label}
@@ -145,7 +146,7 @@ const CreateShop = ({
           type="submit"
           className="w-full text-lg bg-[#FF541B] text-white py-2 rounded-lg mt-4"
         >
-          Create
+          Tạo cửa hàng
         </button>
       </form>
     </div>

@@ -11,22 +11,17 @@ const fetchUser = async () => {
       "/auth/api/logged-in-user",
       isProtected
     );
-    // Return null instead of undefined if user data is missing
-    return response.data?.user || null;
-  } catch (error) {
-    // Return null on error instead of throwing or returning undefined
+    return response.data?.user ?? null;
+  } catch (error: any) {
+    if (error.response?.status === 401) {
+      throw error;
+    }
     return null;
   }
 };
 
 const useUser = () => {
-  const {
-    setLoggedIn,
-    setUser,
-    user: storedUser,
-    logout,
-    isLoggedIn,
-  } = useAuthStore();
+  const { setLoggedIn } = useAuthStore();
 
   const {
     data: user,
@@ -37,7 +32,7 @@ const useUser = () => {
     queryFn: fetchUser,
     staleTime: 1000 * 60 * 5,
     retry: false,
-    enabled: isLoggedIn, // Only run query if user should be logged in
+    enabled: typeof window !== "undefined",
   });
 
   // Update auth state based on query results
@@ -46,23 +41,15 @@ const useUser = () => {
       typeof window !== "undefined" ? window.location.pathname : "";
 
     if (user) {
-      setUser(user);
-    } else if (isError && currentPath !== "/payment-success") {
-      // Only logout if not on payment-success page
-      logout();
+      setLoggedIn(true);
+    } else if (isError) {
+      setLoggedIn(false);
     }
-  }, [user, isError, setUser, logout]);
-
-  // If logged in but no stored user, fetch and store
-  React.useEffect(() => {
-    if (isLoggedIn && !storedUser && !isPending && !user) {
-      // Trigger fetch by enabling query
-    }
-  }, [isLoggedIn, storedUser, isPending, user]);
+  }, [user, isError, setLoggedIn]);
 
   // Return stored user if available, otherwise fetched user
   return {
-    user: storedUser || user,
+    user: user as any,
     isLoading: isPending,
     isError,
   };

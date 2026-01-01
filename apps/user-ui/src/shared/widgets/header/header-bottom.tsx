@@ -63,7 +63,7 @@ const HeaderBottom = () => {
         >
           <div className="flex items-center gap-2">
             <AlignLeft color="white" />
-            <span className="text-white font-medium">All Categories</span>
+            <span className="text-white font-medium">Tất cả danh mục</span>
           </div>
           <ChevronDown color="white" />
         </div>
@@ -129,7 +129,7 @@ const HeaderBottom = () => {
               })
             ) : (
               <p className="px-5 py-4 text-sm text-gray-500">
-                No categories found.
+                Không có danh mục nào.
               </p>
             )}
           </div>
@@ -162,7 +162,7 @@ const HeaderBottom = () => {
                     </Link>
 
                     <Link href={"/profile"}>
-                      <span className="block font-medium">Hello,</span>
+                      <span className="block font-medium">Xin chào,</span>
                       <span className="font-semibold">
                         {user?.name?.split(" ")[0]}
                       </span>
@@ -171,10 +171,10 @@ const HeaderBottom = () => {
                 ) : (
                   <Link href={"/login"}>
                     <span className="block font-[500] opacity-[.6]">
-                      Hello,
+                      Xin chào,
                     </span>
                     <span className="font-[600]">
-                      {isLoading ? "..." : "Sign In"}
+                      {isLoading ? "..." : "Đăng nhập"}
                     </span>
                   </Link>
                 )}

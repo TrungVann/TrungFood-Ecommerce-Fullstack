@@ -45,13 +45,13 @@ const WishlistPage = () => {
         {/* Breadcrumb */}
         <div className="pb-[50px]">
           <h1 className="md:pt-[50px] font-medium text-[44px] leading-[1] mb-[16px] font-jost">
-            Wishlist
+            Danh sách yêu thích
           </h1>
           <Link href={"/"} className="text-[#55585b] hover:underline">
-            Home
+            Trang chủ
           </Link>
           <span className="inline-block p-[1.5px] mx-1 bg-[#a8acb0] rounded-full"></span>
-          <span className="text-[#55585b]">Wishlist</span>
+          <span className="text-[#55585b]">Danh sách yêu thích</span>
         </div>
 
         {/* If wishlist is empty */}
@@ -71,10 +71,10 @@ const WishlistPage = () => {
             <table className="w-full border-collapse">
               <thead className="bg-[#f1f3f4]">
                 <tr>
-                  <th className="py-3 text-left pl-4">Product</th>
-                  <th className="py-3 text-left">Price</th>
-                  <th className="py-3 text-left">Quantity</th>
-                  <th className="py-3 text-left">Action</th>
+                  <th className="py-3 text-left pl-4">Tên sản phẩm</th>
+                  <th className="py-3 text-left">Giá</th>
+                  <th className="py-3 text-left">Số lượng</th>
+                  <th className="py-3 text-left">Tương tác</th>
                   <th className="py-3 text-left"></th>
                 </tr>
               </thead>
@@ -123,7 +123,7 @@ const WishlistPage = () => {
                           addToCart(item, user, location, deviceInfo);
                         }}
                       >
-                        Add To Cart
+                        Thêm vào giỏ hàng
                       </button>
                     </td>
                     <td>
@@ -131,7 +131,7 @@ const WishlistPage = () => {
                         className="text-[#818487] cursor-pointer hover:text-[#ff1826] transition duration-200"
                         onClick={() => removeItem(item.id)}
                       >
-                        ✕ Remove
+                        ✕ Xóa
                       </button>
                     </td>
                   </tr>

@@ -137,10 +137,10 @@ const Signup = () => {
             </div>
             <span className="ml-[-15px]">
               {step === 1
-                ? "Create Account"
+                ? "Tạo tài khoản"
                 : step === 2
-                ? "Setup Shop"
-                : "Connect Bank"}
+                ? "Thiết lập cửa hàng"
+                : "Kết nối thanh toán"}
             </span>
           </div>
         ))}
@@ -153,7 +153,7 @@ const Signup = () => {
             {!showOtp ? (
               <form onSubmit={handleSubmit(onSubmit)}>
                 <h3 className="text-2xl font-semibold text-center mb-4">
-                  Create Account
+                  Tạo tài khoản
                 </h3>
                 <label className="block text-gray-700 mb-1">Name</label>
                 <input
@@ -161,7 +161,7 @@ const Signup = () => {
                   placeholder="Nguyen Van Trung"
                   className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
                   {...register("name", {
-                    required: "Name is required",
+                    required: "Tên không được để trống",
                   })}
                 />
                 {errors.email && (
@@ -176,11 +176,11 @@ const Signup = () => {
                   placeholder="abcxyz@gmail.com"
                   className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
                   {...register("email", {
-                    required: "Email is required",
+                    required: "Email không được để trống",
                     pattern: {
                       value:
                         /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                      message: "Invalid email address",
+                      message: "Email không hợp lệ",
                     },
                   })}
                 />
@@ -190,24 +190,26 @@ const Signup = () => {
                   </p>
                 )}
 
-                <label className="block text-gray-700 mb-1">Phone Number</label>
+                <label className="block text-gray-700 mb-1">
+                  Số điện thoại
+                </label>
                 <input
                   type="tel"
                   placeholder="88012345****"
                   className="w-full p-2 border border-gray-300 outline-0 rounded-[4px] mb-1"
                   {...register("phone_number", {
-                    required: "Phone Number is required",
+                    required: "Số điện thoại không được để trống",
                     pattern: {
                       value: /^\+?[1-9]\d{1,14}$/, // Cho phép mọi số điện thoại quốc tế theo E.164 format
-                      message: "Invalid phone number format",
+                      message: "Định dạng số điện thoại không hợp lệ",
                     },
                     minLength: {
                       value: 10,
-                      message: "Phone number must be at least 10 digits",
+                      message: "Số điện thoại phải có ít nhất 10 chữ số",
                     },
                     maxLength: {
                       value: 15,
-                      message: "Phone number cannot exceed 15 digits",
+                      message: "Số điện thoại không thể vượt quá 15 chữ số",
                     },
                   })}
                 />
@@ -218,12 +220,12 @@ const Signup = () => {
                   </p>
                 )}
 
-                <label className="block text-gray-700 mb-1">Country</label>
+                <label className="block text-gray-700 mb-1">Đất nước</label>
                 <select
                   className="w-full p-2 border border-gray-300 outline-0 rounded-[4px] mb-1 bg-white"
                   {...register("country", { required: "Country is required" })}
                 >
-                  <option value="">Select your country</option>
+                  <option value="">Chọn đất nước của bạn</option>
                   {countries.map((country) => (
                     <option key={country.code} value={country.code}>
                       {country.name}
@@ -237,17 +239,17 @@ const Signup = () => {
                   </p>
                 )}
 
-                <label className="block text-gray-700 mb-1">Password</label>
+                <label className="block text-gray-700 mb-1">Mật khẩu</label>
                 <div className="relative">
                   <input
                     type={passwordVisible ? "text" : "password"}
-                    placeholder="Min. 6 characters"
+                    placeholder="Tối thiểu 6 ký tự"
                     className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
                     {...register("password", {
-                      required: "Password is required",
+                      required: "Mật khẩu không được để trống",
                       minLength: {
                         value: 6,
-                        message: "Password must be at least 6 characters",
+                        message: "Mật khẩu phải có ít nhất 6 ký tự",
                       },
                     })}
                   />
@@ -270,7 +272,7 @@ const Signup = () => {
                   disabled={signupMutation.isPending}
                   className="w-full text-lg cursor-pointer mt-4 bg-[#FF541B] text-white py-2 rounded-lg"
                 >
-                  {signupMutation.isPending ? " Signing up..." : "Signup"}
+                  {signupMutation.isPending ? "Đang đăng ký..." : "Đăng ký"}
                 </button>
 
                 {signupMutation.isError &&
@@ -282,16 +284,16 @@ const Signup = () => {
                   )}
 
                 <p className="pt-3 text-center">
-                  Already have an account?{" "}
+                  Đã có tài khoản?{" "}
                   <Link href={"/login"} className="text-[#FF541B]">
-                    Login
+                    Đăng nhập
                   </Link>
                 </p>
               </form>
             ) : (
               <div>
                 <h3 className="text-xl font-semibold text-center mb-4">
-                  Enter OTP
+                  Nhập OTP
                 </h3>
                 <div className="flex justify-center gap-6">
                   {otp?.map((digit, index) => (
@@ -314,7 +316,9 @@ const Signup = () => {
                   disabled={verifyOtpMutation.isPending}
                   onClick={() => verifyOtpMutation.mutate()}
                 >
-                  {verifyOtpMutation.isPending ? "Verifying..." : "Verify OTP"}
+                  {verifyOtpMutation.isPending
+                    ? "Đang xác minh..."
+                    : "Xác minh OTP"}
                 </button>
                 <p className="text-center text-sm mt-4">
                   {canResend ? (
@@ -322,10 +326,10 @@ const Signup = () => {
                       onClick={resendOtp}
                       className="text-[#FF541B] cursor-pointer"
                     >
-                      Resend OTP
+                      Gửi lại OTP
                     </button>
                   ) : (
-                    `Resend OTP in ${timer}s`
+                    `Gửi lại OTP trong ${timer}s`
                   )}
                 </p>
                 {verifyOtpMutation?.isError &&
@@ -344,13 +348,13 @@ const Signup = () => {
         )}
         {activeStep === 3 && (
           <div className="text-center">
-            <h3 className="text-2xl font-semibold">Withdraw Method</h3>
+            <h3 className="text-2xl font-semibold">Phương thức rút tiền</h3>
             <br />
             <button
               className="w-full m-auto flex items-center justify-center gap-3 text-lg bg-[#334155] text-white py-2 rounded-lg"
               onClick={connectStipe}
             >
-              Connect Stripe <StripeLogo />
+              Kết nối Stripe <StripeLogo />
             </button>
           </div>
         )}

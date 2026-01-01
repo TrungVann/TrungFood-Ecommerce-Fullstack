@@ -867,6 +867,11 @@ export const topShops = async (
     // Aggregate total sales per shop from orders
     const topShopsData = await prisma.orders.groupBy({
       by: ["shopId"],
+      where: {
+        status: {
+          in: ["completed", "Paid"], // Include completed and Paid orders
+        },
+      },
       _sum: {
         total: true,
       },
@@ -878,14 +883,19 @@ export const topShops = async (
       take: 10,
     });
 
+    console.log("Top shops data:", topShopsData);
+
     // Fetch the corresponding shop details
     const shopIds = topShopsData.map((item) => item.shopId);
+
+    console.log("Shop IDs:", shopIds);
 
     const shops = await prisma.shops.findMany({
       where: {
         id: {
           in: shopIds,
         },
+        isDeleted: false, // Only active shops
       },
       select: {
         id: true,
@@ -898,6 +908,8 @@ export const topShops = async (
         category: true,
       },
     });
+
+    console.log("Found shops:", shops);
 
     // Merge sales with shop data
     const enrichedShops = shops.map((shop) => {

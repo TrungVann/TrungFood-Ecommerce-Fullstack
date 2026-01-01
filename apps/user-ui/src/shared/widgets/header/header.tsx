@@ -55,16 +55,6 @@ const Header = () => {
       <div className="w-[80%] py-5 m-auto md:flex hidden items-center justify-between">
         <div>
           <Link href={"/"}>
-            {/* <Image
-              src={
-                layout?.logo ||
-                "https://ik.imagekit.io/sjbr5usgh/logo/Blue%20Waves%20Surfing%20Club%20Logo.png?updatedAt=1744371251216"
-              }
-              width={300}
-              height={100}
-              alt=""
-              className="h-[70px] ml-[-50px] mb-[-30px] object-cover"
-            /> */}
             <h2 className="text-4xl font-bold text-gray-900">
               Trung<span className="text-orange-500">Food</span>
             </h2>
@@ -77,7 +67,7 @@ const Header = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search for products..."
+            placeholder="Tìm kiếm sản phẩm..."
             className="w-full px-4 font-Poppins font-medium border-[2.5px] border-[#FF541B] outline-none h-[55px]"
           />
           <div
@@ -107,7 +97,7 @@ const Header = () => {
           )}
           {loadingSuggestions && (
             <div className="absolute w-full top-[60px] bg-white border border-gray-200 shadow-md z-50 px-4 py-3 text-sm text-gray-500">
-              Searching...
+              Đang tìm kiếm...
             </div>
           )}
         </div>
@@ -127,7 +117,7 @@ const Header = () => {
                 </div>
                 <div className="flex flex-col">
                   <Link href={"/profile"}>
-                    <span className="block font-medium">Hello,</span>
+                    <span className="block font-medium">Xin chào,</span>
                     <span className="font-semibold">
                       {user?.name?.split(" ")[0]}
                     </span>
@@ -143,9 +133,9 @@ const Header = () => {
                   <ProfileIcon />
                 </Link>
                 <Link href={"/login"}>
-                  <span className="block font-medium">Hello,</span>
+                  <span className="block font-medium">Xin chào,</span>
                   <span className="font-semibold">
-                    {isLoading ? "..." : "Sign In"}
+                    {isLoading ? "..." : "Đăng nhập"}
                   </span>
                 </Link>
               </>
