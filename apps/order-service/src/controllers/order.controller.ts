@@ -719,6 +719,240 @@ export const getUserOrders = async (
   }
 };
 
+// create order from session (for immediate order creation after payment success)
+export const createOrderFromSession = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { sessionId } = req.body;
+    const userId = req.user.id;
+
+    if (!sessionId) {
+      return next(new ValidationError("Session ID is required."));
+    }
+
+    const sessionKey = `payment-session:${sessionId}`;
+    const sessionData = await redis.get(sessionKey);
+
+    if (!sessionData) {
+      return next(new ValidationError("Session not found or expired."));
+    }
+
+    const { cart, totalAmount, shippingAddressId, coupon } =
+      JSON.parse(sessionData);
+
+    // Check if order already exists for this session to avoid duplicates
+    const existingOrder = await prisma.orders.findFirst({
+      where: {
+        userId,
+        // Assuming we can add a sessionId field or check by items
+        // For now, check if any order was created recently with same total
+        createdAt: {
+          gte: new Date(Date.now() - 60000), // within last minute
+        },
+        total: { gte: totalAmount - 0.01, lte: totalAmount + 0.01 }, // approximate match
+      },
+    });
+
+    if (existingOrder) {
+      return res.status(200).json({
+        success: true,
+        message: "Order already exists",
+        orderId: existingOrder.id,
+      });
+    }
+
+    const user = await prisma.users.findUnique({ where: { id: userId } });
+    const name = user?.name!;
+    const email = user?.email!;
+
+    const shopGrouped = cart.reduce((acc: any, item: any) => {
+      if (!acc[item.shopId]) acc[item.shopId] = [];
+      acc[item.shopId].push(item);
+      return acc;
+    }, {});
+
+    const createdOrders = [];
+
+    for (const shopId in shopGrouped) {
+      const orderItems = shopGrouped[shopId];
+
+      let orderTotal = orderItems.reduce(
+        (sum: number, p: any) => sum + p.quantity * p.sale_price,
+        0
+      );
+      // Apply discount if applicable
+      if (
+        coupon &&
+        coupon.discountedProductId &&
+        orderItems.some((item: any) => item.id === coupon.discountedProductId)
+      ) {
+        const discountedItem = orderItems.find(
+          (item: any) => item.id === coupon.discountedProductId
+        );
+        if (discountedItem) {
+          const discount =
+            coupon.discountPercent > 0
+              ? (discountedItem.sale_price *
+                  discountedItem.quantity *
+                  coupon.discountPercent) /
+                100
+              : coupon.discountAmount;
+
+          orderTotal -= discount;
+        }
+      }
+
+      // Create order
+      const order = await prisma.orders.create({
+        data: {
+          userId,
+          shopId,
+          total: orderTotal,
+          status: "Paid",
+          shippingAddressId: shippingAddressId || null,
+          couponCode: coupon?.code || null,
+          discountAmount: coupon?.discountAmount || 0,
+          items: {
+            create: orderItems.map((item: any) => ({
+              productId: item.id,
+              quantity: item.quantity,
+              price: item.sale_price,
+              selectedOptions: item.selectedOptions,
+            })),
+          },
+        },
+      });
+
+      createdOrders.push(order);
+
+      // Update product & analytics (same as webhook)
+      for (const item of orderItems) {
+        const { id: productId, quantity } = item;
+
+        await prisma.products.update({
+          where: { id: productId },
+          data: {
+            stock: { decrement: quantity },
+            totalSales: { increment: quantity },
+          },
+        });
+
+        await prisma.productAnalytics.upsert({
+          where: { productId },
+          create: {
+            productId,
+            shopId,
+            purchases: quantity,
+            lastViewedAt: new Date(),
+          },
+          update: {
+            purchases: { increment: quantity },
+          },
+        });
+
+        const existingAnalytics = await prisma.userAnalytics.findUnique({
+          where: { userId },
+        });
+
+        const newAction = {
+          productId,
+          shopId,
+          action: "purchase",
+          timestamp: Date.now(),
+        };
+
+        const currentActions = Array.isArray(existingAnalytics?.actions)
+          ? (existingAnalytics.actions as Prisma.JsonArray)
+          : [];
+
+        if (existingAnalytics) {
+          await prisma.userAnalytics.update({
+            where: { userId },
+            data: {
+              lastVisited: new Date(),
+              actions: [...currentActions, newAction],
+            },
+          });
+        } else {
+          await prisma.userAnalytics.create({
+            data: {
+              userId,
+              lastVisited: new Date(),
+              actions: [newAction],
+            },
+          });
+        }
+      }
+
+      // Send email
+      await sendEmail(
+        email,
+        "🛍️ Your TrungFood Order Confirmation",
+        "order-confirmation",
+        {
+          name,
+          cart,
+          totalAmount: coupon?.discountAmount
+            ? totalAmount - coupon?.discountAmount
+            : totalAmount,
+          trackingUrl: `/order/${order.id}`,
+        }
+      );
+    }
+
+    // Create notifications for sellers
+    const createdShopIds = Object.keys(shopGrouped);
+    const sellerShops = await prisma.shops.findMany({
+      where: { id: { in: createdShopIds } },
+      select: {
+        id: true,
+        sellerId: true,
+        name: true,
+      },
+    });
+
+    for (const shop of sellerShops) {
+      const firstProduct = shopGrouped[shop.id][0];
+      const productTitle = firstProduct?.title || "new item";
+
+      await prisma.notifications.create({
+        data: {
+          title: "🛒 New Order Received",
+          message: `A customer just ordered ${productTitle} from your shop.`,
+          creatorId: userId,
+          receiverId: shop.sellerId,
+          redirect_link: `https://trungfood.com/order/${sessionId}`,
+        },
+      });
+    }
+
+    // Create notification for admin
+    await prisma.notifications.create({
+      data: {
+        title: "📦 Platform Order Alert",
+        message: `A new order was placed by ${name}.`,
+        creatorId: userId,
+        receiverId: "admin",
+        redirect_link: `https://trungfood.com/order/${sessionId}`,
+      },
+    });
+
+    // Clean up session
+    await redis.del(sessionKey);
+
+    res.status(201).json({
+      success: true,
+      message: "Order created successfully",
+      orders: createdOrders,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // get admin orders
 export const getAdminOrders = async (
   req: any,

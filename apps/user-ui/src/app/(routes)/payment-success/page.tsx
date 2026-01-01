@@ -28,6 +28,21 @@ const PaymentSuccessPage = () => {
         console.log("Token refreshed successfully");
         // Ensure user is marked as logged in
         setLoggedIn(true);
+
+        // Create order from session if sessionId is present
+        if (sessionId) {
+          try {
+            const response = await axios.post(
+              `${process.env.NEXT_PUBLIC_SERVER_URI}/order/api/create-order-from-session`,
+              { sessionId },
+              { withCredentials: true }
+            );
+            console.log("Order created successfully:", response.data);
+          } catch (orderError) {
+            console.error("Failed to create order:", orderError);
+            // Don't block the UI if order creation fails, as webhook might handle it
+          }
+        }
       } catch (error) {
         console.error("Failed to refresh token:", error);
         // If refresh fails, try to check if user is still logged in
@@ -58,7 +73,7 @@ const PaymentSuccessPage = () => {
     };
 
     refreshAndSetup();
-  }, [setLoggedIn]);
+  }, [setLoggedIn, sessionId]);
 
   if (isRefreshing) {
     return (
