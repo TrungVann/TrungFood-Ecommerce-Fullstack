@@ -270,7 +270,7 @@ model notifications {
   message       String
   status        String  @default("Unread")
 
-  cratedAt  DateTime @default(now())
+  createdAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 

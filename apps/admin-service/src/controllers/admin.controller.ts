@@ -187,7 +187,7 @@ export const getAllAdmins = async (
       },
     });
 
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       admins,
     });
@@ -384,7 +384,7 @@ export const getAllNotifications = async (
         receiverId: "admin",
       },
       orderBy: {
-        cratedAt: "desc",
+        createdAt: "desc",
       },
     });
 
