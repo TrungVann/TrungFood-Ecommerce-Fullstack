@@ -32,19 +32,19 @@ const Page = () => {
   });
 
   const { onChange: formOnChange, ...restSlugProps } = register("slug", {
-    required: "Slug is required!",
+    required: "Đường dẫn phụ không được để trống!",
     pattern: {
       value: /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
       message:
-        "Invalid slug format! Use only lowercase letters, numbers, and dashes (e.g., product-slug).",
+        "Định dạng đường dẫn phụ không hợp lệ! Chỉ sử dụng chữ thường, số và dấu gạch ngang (ví dụ: product-slug).",
     },
     minLength: {
       value: 3,
-      message: "Slug must be at least 3 characters long.",
+      message: "Đường dẫn phụ phải dài ít nhất 3 ký tự.",
     },
     maxLength: {
       value: 50,
-      message: "Slug cannot be longer than 50 characters.",
+      message: "Đường dẫn phụ không được dài quá 50 ký tự.",
     },
   });
 
@@ -64,14 +64,16 @@ const Page = () => {
           .post("/product/api/slug-validator", { slug: slugValue }, isProtected)
           .then((res) => {
             if (res.data.available) {
-              toast.success("Slug is available and applied!");
+              toast.success("Đường dẫn phụ đã có sẵn và đã được áp dụng!");
             } else {
               setValue("slug", res.data.slug);
-              toast.info("Slug was taken. Suggested new one applied.");
+              toast.info(
+                "Đường dẫn phụ đã có người dùng. Một đường dẫn mới được đề xuất đã được áp dụng."
+              );
             }
           })
           .catch(() => {
-            toast.error("Error checking slug!");
+            toast.error("Lỗi khi kiểm tra đường dẫn phụ!");
           })
           .finally(() => {
             setIsSlugChecking(false);
@@ -139,9 +141,9 @@ const Page = () => {
     >
       {/* Heading & Breadcrumbs */}
       <h2 className="text-2xl py-2 font-semibold font-Poppins text-white">
-        Create Product
+        Tạo sản phẩm
       </h2>
-      <BreadCrumbs title="Create Product" />
+      <BreadCrumbs title="Tạo sản phẩm" />
 
       {/* Content Layout */}
       <div className="py-4 w-full flex gap-6">
@@ -179,9 +181,11 @@ const Page = () => {
             {/* Product Title Input */}
             <div className="w-2/4">
               <Input
-                label="Product Title *"
-                placeholder="Enter product title"
-                {...register("title", { required: "Title is required" })}
+                label="Tiêu đề sản phẩm *"
+                placeholder="Nhập tiêu đề sản phẩm"
+                {...register("title", {
+                  required: "Tiêu đề không được để trống",
+                })}
               />
               {errors.title && (
                 <p className="text-red-500 text-xs mt-1">
@@ -194,15 +198,15 @@ const Page = () => {
                   type="textarea"
                   rows={7}
                   cols={10}
-                  label="Short Description * (Max 150 words)"
-                  placeholder="Enter product description for quick view"
+                  label="Mô tả ngắn * (Tối đa 150 từ)"
+                  placeholder="Nhập mô tả ngắn cho sản phẩm"
                   {...register("short_description", {
-                    required: "Description is required",
+                    required: "Mô tả không được để trống",
                     validate: (value) => {
                       const wordCount = value.trim().split(/\s+/).length;
                       return (
                         wordCount <= 150 ||
-                        `Description cannot exceed 150 words (Current: ${wordCount})`
+                        `Mô tả không được vượt quá 150 từ (Hiện tại: ${wordCount})`
                       );
                     },
                   })}
@@ -217,9 +221,10 @@ const Page = () => {
               <div className="mt-2">
                 <Input
                   label="Tags *"
-                  placeholder="apple,flagship"
+                  placeholder="food,vegetable,..."
                   {...register("tags", {
-                    required: "Seperate related products tags with a coma,",
+                    required:
+                      "Phân tách các thẻ sản phẩm liên quan bằng dấu phẩy",
                   })}
                 />
                 {errors.tags && (
@@ -231,10 +236,10 @@ const Page = () => {
 
               <div className="mt-2">
                 <Input
-                  label="Quality Guarantee *"
+                  label="Đảm bảo chất lượng *"
                   placeholder="Đổi món mới nếu không hài lòng"
                   {...register("quality_guarantee", {
-                    required: "Quality Guarantee is required!",
+                    required: "Đảm bảo chất lượng không được để trống!",
                   })}
                 />
                 {errors.quality_guarantee && (
@@ -266,7 +271,7 @@ const Page = () => {
                         const title = getValues("title");
                         if (!title) {
                           toast.error(
-                            "Please enter a product title to generate a slug!"
+                            "Vui lòng nhập tiêu đề sản phẩm để tạo đường dẫn phụ!"
                           );
                           return;
                         }
@@ -289,19 +294,21 @@ const Page = () => {
 
                           if (available) {
                             setValue("slug", rawSlug);
-                            toast.success("Slug is available!");
+                            toast.success("Đường dẫn phụ khả dụng!");
                           } else if (suggestedSlug) {
                             setValue("slug", suggestedSlug);
                             toast.info(
-                              "Slug not available, suggested new one!"
+                              "Đường dẫn phụ không khả dụng, đề xuất đường dẫn phụ mới!"
                             );
                           } else {
                             toast.error(
-                              "Slug is already taken, try editing it."
+                              "Đường dẫn phụ đã được sử dụng, vui lòng chỉnh sửa."
                             );
                           }
                         } catch (err) {
-                          toast.error("Failed to validate slug. Try again.");
+                          toast.error(
+                            "Không thể xác thực đường dẫn phụ. Vui lòng thử lại."
+                          );
                         }
                       }}
                     />
@@ -317,13 +324,13 @@ const Page = () => {
 
               <div className="mt-2">
                 <Input
-                  label="Brand"
-                  placeholder="Apple"
+                  label="Thương hiệu"
+                  placeholder="KFC, CocaCola,..."
                   {...register("brand")}
                 />
-                {errors.tags && (
+                {errors.brand && (
                   <p className="text-red-500 text-xs mt-1">
-                    {errors.tags.message as string}
+                    {errors.brand.message as string}
                   </p>
                 )}
               </div>
@@ -346,16 +353,16 @@ const Page = () => {
                 </label>
                 <select
                   {...register("cash_on_delivery", {
-                    required: "Cash on Delivery is required",
+                    required: "Thanh toán khi nhận hàng",
                   })}
                   defaultValue="yes"
                   className="w-full border outline-none border-gray-700 bg-transparent p-2 rounded-md text-white"
                 >
                   <option value="yes" className="bg-black">
-                    Yes
+                    Có
                   </option>
                   <option value="no" className="bg-black">
-                    No
+                    Không
                   </option>
                 </select>
                 {errors.cash_on_delivery && (
@@ -367,24 +374,24 @@ const Page = () => {
             </div>
             <div className="w-2/4">
               <label className="block font-semibold text-gray-300 mb-1">
-                Category *
+                Danh mục *
               </label>
               {isLoading ? (
-                <p className="text-gray-400">Loading categories...</p>
+                <p className="text-gray-400">Đang tải danh mục...</p>
               ) : isError ? (
-                <p className="text-red-500">Failed to load categories</p>
+                <p className="text-red-500">Thất bại khi tải danh mục</p>
               ) : (
                 <Controller
                   name="category"
                   control={control}
-                  rules={{ required: "Category is required" }}
+                  rules={{ required: "Danh mục không được để trống" }}
                   render={({ field }) => (
                     <select
                       {...field}
                       className="w-full border outline-none border-gray-700 bg-transparent p-2 rounded-md text-white"
                     >
                       <option value="" className="bg-black">
-                        Select Category
+                        Lựa chọn danh mục
                       </option>
                       {categories?.map((category: string) => (
                         <option
@@ -407,19 +414,19 @@ const Page = () => {
 
               <div className="mt-2">
                 <label className="block font-semibold text-gray-300 mb-1">
-                  Subcategory *
+                  Danh mục con *
                 </label>
                 <Controller
                   name="subCategory"
                   control={control}
-                  rules={{ required: "Subcategory is required" }}
+                  rules={{ required: "Danh mục con không được để trống" }}
                   render={({ field }) => (
                     <select
                       {...field}
                       className="w-full border outline-none border-gray-700 bg-transparent p-2 rounded-md text-white"
                     >
                       <option value="" className="bg-black">
-                        Select Subcategory
+                        Lựa chọn danh mục con
                       </option>
                       {subcategories?.map((subcategory: string) => (
                         <option
@@ -442,20 +449,20 @@ const Page = () => {
 
               <div className="mt-2">
                 <label className="block font-semibold text-gray-300 mb-1">
-                  Detailed Description * (Min 100 words)
+                  Mô tả chi tiết * (Tối thiểu 100 từ)
                 </label>
                 <Controller
                   name="detailed_description"
                   control={control}
                   rules={{
-                    required: "Detailed description is required!",
+                    required: "Mô tả chi tiết không được để trống!",
                     validate: (value) => {
                       const wordCount = value
                         ?.split(/\s+/)
                         .filter((word: string) => word).length;
                       return (
                         wordCount >= 100 ||
-                        "Description must be at least 100 words!"
+                        "Mô tả chi tiết phải có ít nhất 100 từ!"
                       );
                     },
                   }}
@@ -482,7 +489,7 @@ const Page = () => {
                       value:
                         /^https:\/\/(www\.)?youtube\.com\/embed\/[a-zA-Z0-9_-]+$/,
                       message:
-                        "Invalid YouTube embed URL! Use format: https://www.youtube.com/embed/xyz123",
+                        "URL nhúng YouTube không hợp lệ! Vui lòng sử dụng định dạng: https://www.youtube.com/embed/xyz123",
                     },
                   })}
                 />
@@ -495,13 +502,13 @@ const Page = () => {
 
               <div className="mt-2">
                 <Input
-                  label="Regular Price"
+                  label="Giá gốc"
                   placeholder="20$"
                   {...register("regular_price", {
                     valueAsNumber: true,
-                    min: { value: 1, message: "Price must be at least 1" },
+                    min: { value: 1, message: "Giá phải lớn hơn hoặc bằng 1" },
                     validate: (value) =>
-                      !isNaN(value) || "Only numbers are allowed",
+                      !isNaN(value) || "Chỉ cho phép nhập số",
                   })}
                 />
                 {errors.regular_price && (
@@ -513,16 +520,19 @@ const Page = () => {
 
               <div className="mt-2">
                 <Input
-                  label="Sale Price *"
+                  label="Giá khuyến mãi *"
                   placeholder="15$"
                   {...register("sale_price", {
-                    required: "Sale Price is required",
+                    required: "Giá khuyến mãi không được để trống!",
                     valueAsNumber: true,
-                    min: { value: 1, message: "Sale Price must be at least 1" },
+                    min: {
+                      value: 1,
+                      message: "Giá khuyến mãi phải lớn hơn hoặc bằng 1",
+                    },
                     validate: (value) => {
-                      if (isNaN(value)) return "Only numbers are allowed";
+                      if (isNaN(value)) return "Chỉ cho phép nhập số";
                       if (regularPrice && value >= regularPrice) {
-                        return "Sale Price must be less than Regular Price";
+                        return "Giá khuyến mãi phải nhỏ hơn giá gốc";
                       }
                       return true;
                     },
@@ -537,20 +547,23 @@ const Page = () => {
 
               <div className="mt-2">
                 <Input
-                  label="Stock *"
+                  label="Hàng tồn *"
                   placeholder="100"
                   {...register("stock", {
-                    required: "Stock is required!",
+                    required: "Hàng tồn không được để trống!",
                     valueAsNumber: true,
-                    min: { value: 1, message: "Stock must be at least 1" },
+                    min: {
+                      value: 1,
+                      message: "Hàng tồn phải lớn hơn hoặc bằng 1",
+                    },
                     max: {
                       value: 1000,
-                      message: "Stock cannot exceed 1,000",
+                      message: "Hàng tồn không thể vượt quá 1.000",
                     },
                     validate: (value) => {
-                      if (isNaN(value)) return "Only numbers are allowed!";
+                      if (isNaN(value)) return "Chỉ cho phép nhập số!";
                       if (!Number.isInteger(value))
-                        return "Stock must be a whole number!";
+                        return "Hàng tồn phải là số nguyên!";
                       return true;
                     },
                   })}
@@ -568,11 +581,11 @@ const Page = () => {
 
               <div className="mt-3">
                 <label className="block font-semibold text-gray-300 mb-1">
-                  Select Discount Codes (optional)
+                  Chọn mã giảm giá (tùy chọn)
                 </label>
 
                 {discountLoading ? (
-                  <p className="text-gray-400">Loading discount codes...</p>
+                  <p className="text-gray-400">Đang tải mã giảm giá...</p>
                 ) : (
                   <div className="flex flex-wrap gap-2">
                     {discountCodes?.map((code: any) => (
@@ -604,7 +617,7 @@ const Page = () => {
                 )}
                 {discountCodes?.length === 0 && !discountLoading && (
                   <p className="text-gray-400">
-                    No Discount codes available to add!
+                    Không có mã giảm giá nào để thêm!
                   </p>
                 )}
               </div>
@@ -619,7 +632,7 @@ const Page = () => {
           className="px-4 py-2 bg-blue-600 text-white rounded-md"
           disabled={loading}
         >
-          {loading ? "Creating..." : "Create"}
+          {loading ? "Đang tạo sản phẩm..." : "Tạo sản phẩm"}
         </button>
       </div>
     </form>

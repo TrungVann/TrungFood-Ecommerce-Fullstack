@@ -110,7 +110,7 @@ const ProductList = () => {
           <span
             className={row.original.stock < 10 ? "text-red-500" : "text-white"}
           >
-            {row.original.stock} left
+            {row.original.stock} còn lại
           </span>
         ),
       },
@@ -182,18 +182,18 @@ const ProductList = () => {
     <div className="w-full min-h-screen p-8">
       {/* Header */}
       <div className="flex justify-between items-center mb-1">
-        <h2 className="text-2xl text-white font-semibold">All Products</h2>
+        <h2 className="text-2xl text-white font-semibold">Tất cả sản phẩm</h2>
         <Link
           href="/dashboard/create-product"
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
         >
-          <Plus size={18} /> Add Product
+          <Plus size={18} /> Thêm sản phẩm
         </Link>
       </div>
 
       {/* Breadcrumbs */}
       <div className="mb-2">
-        <BreadCrumbs title="All Products" />
+        <BreadCrumbs title="Tất cả sản phẩm" />
       </div>
 
       {/* Search Bar */}
@@ -201,7 +201,7 @@ const ProductList = () => {
         <Search size={18} className="text-gray-400 mr-2" />
         <input
           type="text"
-          placeholder="Search products..."
+          placeholder="Tìm kiếm sản phẩm..."
           className="w-full bg-transparent text-white outline-none"
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
@@ -211,7 +211,7 @@ const ProductList = () => {
       {/* Table */}
       <div className="overflow-x-auto bg-gray-900 rounded-lg p-4">
         {isLoading ? (
-          <p className="text-center text-white">Loading products...</p>
+          <p className="text-center text-white">Đang tải sản phẩm...</p>
         ) : (
           <table className="w-full text-white">
             <thead>
@@ -251,7 +251,7 @@ const ProductList = () => {
         )}
 
         {!isLoading && products?.length === 0 && (
-          <p className="text-center py-3 text-white">No products found!</p>
+          <p className="text-center py-3 text-white">Không tìm thấy sản phẩm!</p>
         )}
 
         {/* Analytics Modal */}

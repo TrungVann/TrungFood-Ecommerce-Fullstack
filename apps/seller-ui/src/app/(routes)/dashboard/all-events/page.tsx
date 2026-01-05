@@ -125,7 +125,7 @@ const EventList = () => {
           <span
             className={row.original.stock < 10 ? "text-red-500" : "text-white"}
           >
-            {row.original.stock} left
+            {row.original.stock} còn lại
           </span>
         ),
       },
@@ -201,7 +201,7 @@ const EventList = () => {
           href="/dashboard/create-event"
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
         >
-          <Plus size={18} /> Add Event
+          <Plus size={18} /> Thêm sự kiện
         </Link>
       </div>
 
@@ -215,7 +215,7 @@ const EventList = () => {
         <Search size={18} className="text-gray-400 mr-2" />
         <input
           type="text"
-          placeholder="Search products..."
+          placeholder="Tìm kiếm sản phẩm..."
           className="w-full bg-transparent text-white outline-none"
           value={globalFilter}
           onChange={(e) => setGlobalFilter(e.target.value)}
@@ -225,7 +225,7 @@ const EventList = () => {
       {/* Table */}
       <div className="overflow-x-auto bg-gray-900 rounded-lg p-4">
         {isLoading ? (
-          <p className="text-center text-white">Loading products...</p>
+          <p className="text-center text-white">Đang tải sản phẩm...</p>
         ) : (
           <table className="w-full text-white">
             <thead>

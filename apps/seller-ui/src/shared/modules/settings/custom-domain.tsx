@@ -45,7 +45,9 @@ const CustomDomains = () => {
   const addDomainMutation = useMutation({
     mutationFn: async (data: any) => {
       if (domains.length > 0) {
-        throw new Error("You can only add one custom domain per shop.");
+        throw new Error(
+          "Bạn chỉ có thể thêm một tên miền tùy chỉnh cho mỗi cửa hàng."
+        );
       }
       const res = await axiosInstance.post("/product/api/add-seller-domain", {
         domain: data.domainName,
@@ -57,7 +59,7 @@ const CustomDomains = () => {
       reset();
     },
     onError: (error: any) => {
-      alert(error.response?.data?.message || "Failed to add domain.");
+      alert(error.response?.data?.message || "Không thêm được tên miền.");
     },
   });
 
@@ -70,7 +72,7 @@ const CustomDomains = () => {
       queryClient.invalidateQueries({ queryKey: ["seller-domain"] });
     },
     onError: () => {
-      toast.error("Failed to remove domain.");
+      toast.error("Không xóa được tên miền.");
     },
   });
 
@@ -86,7 +88,9 @@ const CustomDomains = () => {
       queryClient.invalidateQueries({ queryKey: ["seller-domain"] });
     },
     onError: () => {
-      alert("Domain verification failed! Check your DNS settings.");
+      alert(
+        "Xác minh tên miền thất bại! Vui lòng kiểm tra cài đặt DNS của bạn."
+      );
     },
   });
 
@@ -97,9 +101,11 @@ const CustomDomains = () => {
           <div className="flex items-center gap-3">
             <PlusCircle size={22} className="text-blue-400" />
             <div>
-              <h3 className="text-white font-semibold">Add Custom Domain</h3>
+              <h3 className="text-white font-semibold">
+                Thêm tên miền tùy chỉnh
+              </h3>
               <p className="text-gray-400 text-sm">
-                Connect your own domain to this store.
+                Kết nối tên miền của bạn với cửa hàng này.
               </p>
             </div>
           </div>
@@ -109,9 +115,9 @@ const CustomDomains = () => {
             className="mt-4 border-t border-gray-700 pt-4"
           >
             <Input
-              label="Domain Name"
+              label="Tên miền"
               placeholder="yourdomain.com"
-              {...register("domainName", { required: "Domain is required" })}
+              {...register("domainName", { required: "Tên miền là bắt buộc" })}
             />
             {errors.domainName && (
               <p className="text-red-500 text-xs mt-1">
@@ -124,10 +130,10 @@ const CustomDomains = () => {
               disabled={addDomainMutation.isPending}
             >
               {addDomainMutation.isPending ? (
-                "Processing..."
+                "Đang xử lý..."
               ) : (
                 <>
-                  <Save size={18} /> Save Domain
+                  <Save size={18} /> Lưu tên miền
                 </>
               )}
             </button>
@@ -138,17 +144,17 @@ const CustomDomains = () => {
       {/* Connected Domains */}
       <div className="px-4 rounded-lg">
         <h3 className="text-white font-semibold flex items-center gap-2">
-          <Globe size={22} className="text-green-400" /> Connected Domain
+          <Globe size={22} className="text-green-400" /> Tên miền đã kết nối
         </h3>
         <p className="text-gray-400 text-sm mt-1 mb-3">
-          Manage your custom domain.
+          Quản lý tên miền tùy chỉnh của bạn.
         </p>
 
         <div className="mt-4 space-y-4">
           {isLoading ? (
-            <p className="text-gray-400">Loading...</p>
+            <p className="text-gray-400">Đang tải...</p>
           ) : domains.length === 0 ? (
-            <p className="text-gray-400">No domain connected yet.</p>
+            <p className="text-gray-400">Không có tên miền nào được kết nối.</p>
           ) : (
             domains.map((domain: any) => (
               <div
@@ -197,8 +203,7 @@ const CustomDomains = () => {
         </div>
         {verifyDomainMutation.isError && (
           <p className="text-red-500 text-sm mt-3">
-            Error verifying domain! Please check your DNS settings and try
-            again.
+            Lỗi xác minh tên miền! Vui lòng kiểm tra cài đặt DNS và thử lại.
           </p>
         )}
       </div>
@@ -208,23 +213,23 @@ const CustomDomains = () => {
         <div className="flex items-center gap-3">
           <Globe size={22} className="text-yellow-400" />
           <div>
-            <h3 className="text-white font-semibold">DNS Configuration</h3>
+            <h3 className="text-white font-semibold">Cấu hình DNS</h3>
             <p className="text-gray-400 text-sm">
-              Set up your DNS records for verification.
+              Thiết lập bản ghi DNS của bạn để xác minh.
             </p>
           </div>
         </div>
 
         <div className="mt-4 border-t border-gray-700 pt-4 text-gray-300">
-          <p>To verify your domain, add the following DNS records:</p>
+          <p>Để xác minh tên miền của bạn, hãy thêm các bản ghi DNS sau:</p>
           <ul className="mt-2 space-y-2 text-sm">
             <li>
-              <strong>CNAME:</strong> Set{" "}
-              <span className="text-green-400">www</span> to point to{" "}
+              <strong>CNAME:</strong> Thiết lập{" "}
+              <span className="text-green-400">www</span> để trỏ đến{" "}
               <span className="text-blue-400">seller.shondhane.com</span>
             </li>
             <li>
-              <strong>A Record:</strong> Point your root domain to{" "}
+              <strong>Bản ghi A:</strong> Trỏ tên miền gốc của bạn đến{" "}
               <span className="text-blue-400">YOUR_SERVER_IP</span>
             </li>
           </ul>

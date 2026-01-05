@@ -74,7 +74,7 @@ const SidebarWrapper = () => {
             href="/dashboard"
           />
           <div className="mt-2 block">
-            <SidebarMenu title="Main Menu">
+            <SidebarMenu title="Menu chính">
               <SidebarItem
                 isActive={activeSidebar === "/dashboard/orders"}
                 title="Orders"

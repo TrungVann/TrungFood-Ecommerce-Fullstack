@@ -5,6 +5,7 @@ import Link from "next/link";
 import React from "react";
 
 const ProductCard = ({ product }: { product: any }) => {
+  const USD_TO_VND_RATE = 26000;
   // Calculate Discount
   const regularPrice = product?.regular_price || 0;
   const salePrice = product?.sale_price || 0;
@@ -59,7 +60,9 @@ const ProductCard = ({ product }: { product: any }) => {
         <div className="flex items-center gap-1 text-yellow-400 mt-2">
           <Star fill="#facc15" size={18} />
           <span className="text-sm">
-            {product?.ratings ? product?.ratings.toFixed(1) : "No Ratings Yet"}
+            {product?.ratings
+              ? product?.ratings.toFixed(1)
+              : "Chưa có đánh giá!"}
           </span>
         </div>
 
@@ -67,15 +70,17 @@ const ProductCard = ({ product }: { product: any }) => {
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-center gap-2">
             <span className="text-lg font-bold text-white">
-              ${product?.sale_price}
+              $
+              {(product?.sale_price * USD_TO_VND_RATE)?.toLocaleString("vi-VN")}
+              ₫
             </span>
             <span className="text-sm text-gray-400 line-through">
-              ${product?.regular_price}
+              ${product?.regular_price?.toLocaleString("vi-VN")}₫
             </span>
             {/* Discount Badge (only if discount > 0) */}
             {discount > 0 && (
               <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-md">
-                {discount}% OFF
+                Giảm {discount}%
               </span>
             )}
           </div>
@@ -85,14 +90,16 @@ const ProductCard = ({ product }: { product: any }) => {
         {startingDate && endingDate && (
           <div className="text-sm text-gray-300 mt-2">
             <p>
-              Offer Running: {startingDate} - {endingDate}
+              Thời gian khuyến mãi: {startingDate} - {endingDate}
             </p>
           </div>
         )}
 
         {/* Sold Count */}
         <div className="text-sm text-green-400 mt-1">
-          {product?.sold > 0 ? `${product?.sold} Sold` : "Not Sold Yet"}
+          {product?.sold > 0
+            ? `${product?.sold} Đã bán`
+            : "Chưa bán sản phẩm nào"}
         </div>
 
         {/* View Details Button */}
@@ -100,7 +107,7 @@ const ProductCard = ({ product }: { product: any }) => {
           href={`${process.env.NEXT_PUBLIC_USER_UI_LINK}/product/${product?.slug}`}
           className="mt-3 block bg-blue-600 text-center text-white py-2 rounded-md hover:bg-blue-700 transition"
         >
-          View Details
+          Xem chi tiết
         </Link>
       </div>
     </div>

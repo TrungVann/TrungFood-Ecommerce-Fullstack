@@ -23,7 +23,7 @@ import ProductCard from "../shared/components/cards/product.card";
 import ImageEditModal from "../shared/components/modals/image-edit-modal";
 import XIcon from "../assets/icons/xIcon";
 
-const TABS = ["Products", "Offers", "Reviews"];
+const TABS = ["Sản phẩm", "Khuyến mãi", "Đánh giá"];
 
 const fetchProducts = async () => {
   const res = await axiosInstance.get("/product/api/get-shop-products");
@@ -75,7 +75,7 @@ const SellerProfile = () => {
               className="flex items-center gap-2 text-gray-300 hover:text-white transition mb-4"
             >
               <ArrowLeft size={20} />
-              <span className="font-medium">Back to Dashboard</span>
+              <span className="font-medium">Trở về trang quản trị</span>
             </button>
           </div>
 
@@ -96,7 +96,7 @@ const SellerProfile = () => {
                 className="absolute top-3 right-3 bg-gray-700 px-3 py-2 rounded-md flex items-center gap-2 text-white hover:bg-gray-600 transition"
                 onClick={() => setEditType("cover")}
               >
-                <Pencil size={16} /> Edit Cover
+                <Pencil size={16} /> Cập nhật ảnh bìa
               </button>
             )}
           </div>
@@ -140,7 +140,7 @@ const SellerProfile = () => {
                     </div>
                     <div className="flex items-center text-gray-300 gap-1">
                       <Users size={18} />{" "}
-                      <span>{seller?.followers || 0} Followers</span>
+                      <span>{seller?.followers || 0} Người theo dõi</span>
                     </div>
                   </div>
 
@@ -165,7 +165,7 @@ const SellerProfile = () => {
                     onClick={() => router.push("/edit-profile")}
                   >
                     <Pencil size={18} />
-                    Edit Profile
+                    Thay đổi thông tin cửa hàng
                   </button>
                 ) : (
                   <button
@@ -184,12 +184,14 @@ const SellerProfile = () => {
             </div>
 
             <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full lg:w-[30%]">
-              <h2 className="text-xl font-semibold text-white">Shop Details</h2>
+              <h2 className="text-xl font-semibold text-white">
+                Chi tiết cửa hàng
+              </h2>
 
               <div className="flex items-center gap-3 mt-3 text-gray-400">
                 <Calendar size={18} />
                 <span>
-                  Joined At:{" "}
+                  Ngày tham gia:{" "}
                   {new Date(seller?.shop?.createdAt).toLocaleDateString()}
                 </span>
               </div>
@@ -210,7 +212,7 @@ const SellerProfile = () => {
                 seller?.shop?.socialLinks.length > 0 && (
                   <div className="mt-3">
                     <h3 className="text-white text-lg font-medium">
-                      Follow Us:
+                      Theo dõi chúng tôi:
                     </h3>
                     <div className="flex gap-3 mt-2">
                       {seller?.shop?.socialLinks?.map(
@@ -259,7 +261,7 @@ const SellerProfile = () => {
                   {products?.map((product: any) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
-                  {products?.length === 0 && <p>No products available yet!</p>}
+                  {products?.length === 0 && <p>Chưa có sản phẩm!</p>}
                 </div>
               )}
               {activeTab === "Offers" && (
@@ -267,10 +269,12 @@ const SellerProfile = () => {
                   {events?.map((product: any) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
-                  {events?.length === 0 && <p>No offers available yet!</p>}
+                  {events?.length === 0 && (
+                    <p>Chưa có chương trình khuyến mãi!</p>
+                  )}
                 </div>
               )}
-              {activeTab === "Reviews" && <div>No reviews available yet!</div>}
+              {activeTab === "Reviews" && <div>Chưa có đánh giá nào!</div>}
             </div>
           </div>
 

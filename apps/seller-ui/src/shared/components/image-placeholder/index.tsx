@@ -72,8 +72,7 @@ const ImagePlaceHolder = ({
                 small ? "text-sm" : "text-lg"
               } pt-2 text-center`}
             >
-              Please choose an image <br />
-              according to the expected ratio
+              Vui lòng chọn một hình ảnh <br /> theo tỷ lệ mong muốn.
             </p>
           </>
         )}

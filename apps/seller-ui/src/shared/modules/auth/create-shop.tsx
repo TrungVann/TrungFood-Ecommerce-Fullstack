@@ -45,7 +45,7 @@ const CreateShop = ({
           Thiết lập cửa hàng
         </h3>
 
-        <label className="block text-gray-700 mb-1">Name *</label>
+        <label className="block text-gray-700 mb-1">Tên *</label>
         <input
           type="text"
           placeholder="Tên cửa hàng"
@@ -114,7 +114,7 @@ const CreateShop = ({
           {...register("website", {
             pattern: {
               value: /^(https?:\/\/)?([\w\d-]+\.)+\w{2,}(\/.*)?$/,
-              message: "địa chỉ URL không hợp lệ",
+              message: "Địa chỉ URL không hợp lệ",
             },
           })}
         />

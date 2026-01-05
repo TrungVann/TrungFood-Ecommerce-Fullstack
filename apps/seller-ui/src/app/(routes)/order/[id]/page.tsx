@@ -77,7 +77,7 @@ const Page = () => {
           onClick={() => router.push("/dashboard/orders")}
         >
           <ArrowLeft />
-          Go Back to Dashboard
+          Trở về trang quản lý
         </span>
       </div>
 

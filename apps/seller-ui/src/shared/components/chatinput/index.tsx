@@ -75,7 +75,7 @@ const ChatInput = ({
         type="text"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        placeholder="Type your message..."
+        placeholder="Nhập tin nhắn của bạn..."
         className="flex-1 px-4 py-2 bg-transparent text-sm border outline-none border-slate-700 rounded-md"
       />
 

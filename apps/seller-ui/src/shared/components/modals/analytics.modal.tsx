@@ -25,7 +25,7 @@ const AnalyticsModal = ({ product, onClose }: any) => {
       <div className="bg-gray-800 p-6 rounded-lg w-[400px]">
         {/* Title */}
         <div className="flex justify-between items-center">
-          <h3 className="text-xl text-white">{product.title} Analytics</h3>
+          <h3 className="text-xl text-white">{product.title} Phân tích</h3>
           <button onClick={onClose} className="text-gray-400 hover:text-white">
             <X size={22} />
           </button>
@@ -35,7 +35,7 @@ const AnalyticsModal = ({ product, onClose }: any) => {
         <div className="mt-4 space-y-3">
           <div className="flex justify-between items-center text-gray-300">
             <span className="flex items-center gap-2">
-              <Eye size={18} className="text-blue-400" /> Views
+              <Eye size={18} className="text-blue-400" /> Lượt xem
             </span>
             <span className="text-white font-semibold">
               {analytics?.views || 0}
@@ -44,7 +44,8 @@ const AnalyticsModal = ({ product, onClose }: any) => {
 
           <div className="flex justify-between items-center text-gray-300">
             <span className="flex items-center gap-2">
-              <ShoppingCart size={18} className="text-yellow-400" /> Cart Adds
+              <ShoppingCart size={18} className="text-yellow-400" /> Thêm vào
+              giỏ hàng
             </span>
             <span className="text-white font-semibold">
               {analytics?.cartAdds || 0}
@@ -53,7 +54,8 @@ const AnalyticsModal = ({ product, onClose }: any) => {
 
           <div className="flex justify-between items-center text-gray-300">
             <span className="flex items-center gap-2">
-              <Heart size={18} className="text-pink-400" /> Wishlist Adds
+              <Heart size={18} className="text-pink-400" /> Thêm vào danh sách
+              yêu thích
             </span>
             <span className="text-white font-semibold">
               {analytics?.wishListAdds || 0}
@@ -62,7 +64,7 @@ const AnalyticsModal = ({ product, onClose }: any) => {
 
           <div className="flex justify-between items-center text-gray-300">
             <span className="flex items-center gap-2">
-              <CheckCircle size={18} className="text-green-400" /> Purchases
+              <CheckCircle size={18} className="text-green-400" /> Thanh toán
             </span>
             <span className="text-white font-semibold">
               {analytics?.purchases || 0}
@@ -75,7 +77,7 @@ const AnalyticsModal = ({ product, onClose }: any) => {
           onClick={onClose}
           className="mt-6 w-full bg-red-500 hover:bg-red-600 py-2 rounded-md text-white font-semibold"
         >
-          Close
+          Đóng
         </button>
       </div>
     </div>

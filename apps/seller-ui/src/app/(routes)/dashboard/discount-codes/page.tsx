@@ -70,7 +70,7 @@ const Page = () => {
 
   const onSubmit = (data: any) => {
     if (discountCodes.length >= 8) {
-      toast.error("You can only create up to 8 discount codes.");
+      toast.error("Bạn chỉ có thể tạo tối đa 8 mã giảm giá.");
       return;
     }
     createDiscountCodeMutation.mutate(data);
@@ -79,12 +79,12 @@ const Page = () => {
   return (
     <div className="w-full min-h-screen p-8">
       <div className="flex justify-between items-center mb-1">
-        <h2 className="text-2xl text-white font-semibold">Discount Codes</h2>
+        <h2 className="text-2xl text-white font-semibold">Mã giảm giá</h2>
         <button
           className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2"
           onClick={() => setShowModal(true)}
         >
-          <Plus size={18} /> Create Discount
+          <Plus size={18} /> Tạo mã giảm giá
         </button>
       </div>
       {/* Breadcrumbs */}
@@ -92,19 +92,19 @@ const Page = () => {
 
       <div className="mt-8 bg-gray-900 p-6 rounded-lg shadow-lg">
         <h3 className="text-lg font-semibold text-white mb-4">
-          Your Discount Codes
+          Mã giảm giá của bạn
         </h3>
         {isLoading ? (
-          <p className="text-gray-400 text-center">Loading discounts...</p>
+          <p className="text-gray-400 text-center">Đang tải mã giảm giá...</p>
         ) : (
           <table className="w-full text-white">
             <thead>
               <tr className="border-b border-gray-800">
-                <th className="p-3 text-left">Title</th>
-                <th className="p-3 text-left">Type</th>
-                <th className="p-3 text-left">Value</th>
-                <th className="p-3 text-left">Code</th>
-                <th className="p-3 text-left">Actions</th>
+                <th className="p-3 text-left">Tiêu đề</th>
+                <th className="p-3 text-left">Kiểu</th>
+                <th className="p-3 text-left">Giá trị</th>
+                <th className="p-3 text-left">Mã giảm giá</th>
+                <th className="p-3 text-left">Hành động</th>
               </tr>
             </thead>
             <tbody>
@@ -141,7 +141,7 @@ const Page = () => {
 
         {!isLoading && discountCodes?.length === 0 && (
           <p className="text-gray-400 w-full pt-4 block text-center">
-            No Discount Codes Available!
+            Không có Mã giảm giá nào hiện có!
           </p>
         )}
       </div>
@@ -151,7 +151,7 @@ const Page = () => {
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-gray-800 p-6 rounded-lg w-[450px] shadow-lg">
             <div className="flex justify-between items-center border-b border-gray-700 pb-3">
-              <h3 className="text-xl text-white">Create Discount Code</h3>
+              <h3 className="text-xl text-white">Tạo mã giảm giá</h3>
               <button
                 onClick={() => setShowModal(false)}
                 className="text-gray-400 hover:text-white"
@@ -163,8 +163,8 @@ const Page = () => {
             <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
               {/* Title */}
               <Input
-                label="Title (Public Name)"
-                {...register("public_name", { required: "Title is required" })}
+                label="Tiêu đề"
+                {...register("public_name", { required: "Tiêu đề không được để trống" })}
               />
               {errors.public_name && (
                 <p className="text-red-500 text-xs mt-1">
@@ -175,7 +175,7 @@ const Page = () => {
               {/* Discount Type */}
               <div className="mt-2">
                 <label className="block font-semibold text-gray-300 mb-1">
-                  Discount Type
+                  Kiểu giảm giá
                 </label>
                 <Controller
                   control={control}
@@ -195,11 +195,11 @@ const Page = () => {
               {/* Discount Value */}
               <div className="mt-2">
                 <Input
-                  label="Discount Value"
+                  label="Giá trị giảm giá"
                   type="number"
                   min={1}
                   {...register("discountValue", {
-                    required: "Value is required",
+                    required: "Giá trị không được để trống",
                   })}
                 />
               </div>
@@ -207,9 +207,9 @@ const Page = () => {
               <div className="mt-2">
                 {/* Discount Code */}
                 <Input
-                  label="Discount Code"
+                  label="Mã giảm giá"
                   {...register("discountCode", {
-                    required: "Discount Code is required",
+                    required: "Mã giảm giá không được để trống",
                   })}
                 />
               </div>
@@ -221,8 +221,8 @@ const Page = () => {
               >
                 <Plus size={18} />
                 {createDiscountCodeMutation?.isPending
-                  ? "Creating ..."
-                  : "Create"}
+                  ? "Đang tạo mã giảm giá ..."
+                  : "Tạo mã giảm giá"}
               </button>
 
               {createDiscountCodeMutation.isError && (
@@ -231,7 +231,7 @@ const Page = () => {
                     createDiscountCodeMutation.error as AxiosError<{
                       message: string;
                     }>
-                  )?.response?.data?.message || "Something went wrong"}
+                  )?.response?.data?.message || "Có lỗi xảy ra"}
                 </p>
               )}
             </form>

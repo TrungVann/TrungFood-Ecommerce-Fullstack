@@ -171,14 +171,14 @@ const ChatPage = () => {
         {/* Sidebar */}
         <div className="w-[320px] border-r border-gray-800 bg-gray-950">
           <div className="p-4 border-b border-gray-800 text-lg font-semibold">
-            Messages
+            Tin nhắn
           </div>
           <div className="divide-y divide-gray-900">
             {isLoading ? (
               <div className="text-center py-5 text-sm">Loading...</div>
             ) : chats.length === 0 ? (
               <p className="text-center py-5 text-sm">
-                No conversation available yet!
+                Không có cuộc trò chuyện nào!
               </p>
             ) : (
               chats.map((chat) => {
@@ -306,7 +306,7 @@ const ChatPage = () => {
             </>
           ) : (
             <div className="flex-1 flex items-center justify-center text-gray-500 text-sm">
-              Select a conversation to start chatting
+              Lựa chọn cuộc trò chuyện để bắt đầu nhắn tin
             </div>
           )}
         </div>

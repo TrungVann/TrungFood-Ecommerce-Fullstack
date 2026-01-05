@@ -70,7 +70,7 @@ const SidebarBarWrapper = () => {
       <div className="block my-3 h-full">
         <Sidebar.Body className="body sidebar">
           <SidebarItem
-            title="Dashboard"
+            title="Tổng quan"
             icon={<Home fill={getIconColor("/dashboard")} />}
             isActive={activeSidebar === "/dashboard"}
             href="/dashboard"
@@ -79,7 +79,7 @@ const SidebarBarWrapper = () => {
             <SidebarMenu title="Main Menu">
               <SidebarItem
                 isActive={activeSidebar === "/dashboard/orders"}
-                title="Orders"
+                title="Đơn hàng"
                 href="/dashboard/orders"
                 icon={
                   <ListOrdered
@@ -90,15 +90,15 @@ const SidebarBarWrapper = () => {
               />
               <SidebarItem
                 isActive={activeSidebar === "/payments"}
-                title="Payments"
+                title="Thanh toán"
                 href="/dashboard/payments"
                 icon={<Payment fill={getIconColor("/dashboard/payments")} />}
               />
             </SidebarMenu>
-            <SidebarMenu title="Products">
+            <SidebarMenu title="Sản phẩm">
               <SidebarItem
                 isActive={activeSidebar === "/dashboard/create-product"}
-                title="Create Product"
+                title="Tạo sản phẩm"
                 href="/dashboard/create-product"
                 icon={
                   <SquarePlus
@@ -109,7 +109,7 @@ const SidebarBarWrapper = () => {
               />
               <SidebarItem
                 isActive={activeSidebar === "/dashboard/all-products"}
-                title="All Products"
+                title="Tất cả sản phẩm"
                 href="/dashboard/all-products"
                 icon={
                   <PackageSearch
@@ -119,10 +119,10 @@ const SidebarBarWrapper = () => {
                 }
               />
             </SidebarMenu>
-            <SidebarMenu title="Events">
+            <SidebarMenu title="Sự kiện">
               <SidebarItem
                 isActive={activeSidebar === "/dashboard/create-event"}
-                title="Create Event"
+                title="Tạo sự kiện"
                 href="/dashboard/create-event"
                 icon={
                   <CalendarPlus
@@ -133,7 +133,7 @@ const SidebarBarWrapper = () => {
               />
               <SidebarItem
                 isActive={activeSidebar === "/dashboard/all-events"}
-                title="All Events"
+                title="Tất cả sự kiện"
                 href="/dashboard/all-events"
                 icon={
                   <BellPlus
@@ -143,10 +143,10 @@ const SidebarBarWrapper = () => {
                 }
               />
             </SidebarMenu>
-            <SidebarMenu title="Controllers">
+            <SidebarMenu title="Điều kiển">
               <SidebarItem
                 isActive={activeSidebar === "/dashboard/inbox"}
-                title="Inbox"
+                title="Tin nhắn"
                 href="/dashboard/inbox"
                 icon={
                   <Mail size={20} color={getIconColor("/dashboard/inbox")} />
@@ -154,7 +154,7 @@ const SidebarBarWrapper = () => {
               />
               <SidebarItem
                 isActive={activeSidebar === "/dashboard/settings"}
-                title="Settings"
+                title="Cài đặt"
                 href="/dashboard/settings"
                 icon={
                   <Settings
@@ -165,7 +165,7 @@ const SidebarBarWrapper = () => {
               />
               <SidebarItem
                 isActive={activeSidebar === "/dashboard/notifications"}
-                title="Notifications"
+                title="Thông báo"
                 href="/dashboard/notifications"
                 icon={
                   <BellRing
@@ -175,10 +175,10 @@ const SidebarBarWrapper = () => {
                 }
               />
             </SidebarMenu>
-            <SidebarMenu title="Extras">
+            <SidebarMenu title="Dịch vụ bổ sung">
               <SidebarItem
                 isActive={activeSidebar === "/dashboard/discount-codes"}
-                title="Discount Codes"
+                title="Mã giảm giá"
                 href="/dashboard/discount-codes"
                 icon={
                   <TicketPercent
@@ -189,7 +189,7 @@ const SidebarBarWrapper = () => {
               />
               <SidebarItem
                 isActive={activeSidebar === "/logout"}
-                title="Logout"
+                title="Đăng xuất"
                 href="/"
                 icon={<LogOut size={20} color={getIconColor("/logout")} />}
               />

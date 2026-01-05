@@ -138,13 +138,23 @@ const HeaderBottom = () => {
         {/* Navigation Links */}
         <div className="flex items-center">
           {navItems.map((i: NavItemsTypes, index: number) => (
-            <Link
-              className="px-5 font-medium text-lg"
-              href={i.href}
-              key={index}
-            >
-              {i.title}
-            </Link>
+            i.onClick ? (
+              <button
+                className="px-5 font-medium text-lg"
+                onClick={i.onClick}
+                key={index}
+              >
+                {i.title}
+              </button>
+            ) : (
+              <Link
+                className="px-5 font-medium text-lg"
+                href={i.href}
+                key={index}
+              >
+                {i.title}
+              </Link>
+            )
           ))}
         </div>
 

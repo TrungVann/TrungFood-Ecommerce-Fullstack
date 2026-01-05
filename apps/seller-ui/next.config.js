@@ -14,9 +14,6 @@ const nextConfig = {
   },
   output: "standalone",
   outputFileTracingRoot: path.join(__dirname, "../../"),
-  experimental: {
-    esmExternals: true,
-  },
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,

@@ -15,7 +15,7 @@ const DeleteDiscountCodeModal = ({
       <div className="bg-gray-800 p-6 rounded-lg w-[450px] shadow-lg">
         {/* Header */}
         <div className="flex justify-between items-center border-b border-gray-700 pb-3">
-          <h3 className="text-xl text-white">Delete Discount Code</h3>
+          <h3 className="text-xl text-white">Xóa mã giảm giá</h3>
           <button onClick={onClose} className="text-gray-400 hover:text-white">
             <X size={22} />
           </button>
@@ -23,13 +23,13 @@ const DeleteDiscountCodeModal = ({
 
         {/* Warning Message */}
         <p className="text-gray-300 mt-4">
-          Are you sure you want to delete{" "}
+          Bạn có chắc chắn muốn xóa{" "}
           <span className="font-semibold text-white">
             {discount.public_name}
           </span>
           ?
           <br />
-          This action **cannot be undone**.
+          Hành động này **không thể hoàn tác**.
         </p>
         {/* Action Buttons */}
         <div className="flex justify-end gap-3 mt-6">
@@ -37,13 +37,13 @@ const DeleteDiscountCodeModal = ({
             onClick={onClose}
             className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-md text-white transition"
           >
-            Cancel
+            Hủy
           </button>
           <button
             onClick={onConfirm}
             className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-white font-semibold transition"
           >
-            Delete
+            Xóa
           </button>
         </div>
       </div>

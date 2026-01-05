@@ -20,11 +20,10 @@ const DeleteConfirmationModal = ({
 
         {/* Body */}
         <p className="text-gray-300 mt-4">
-          Are you sure you want to delete{" "}
+          Bạn có chắc chắn muốn xóa{" "}
           <span className="font-semibold text-white">{product.title}</span>?
           <br />
-          This product will be moved to a **delete state** and permanently
-          removed **after 24 hours**. You can recover it within this time.
+          Sản phẩm này sẽ được chuyển sang trạng thái xóa và bị gỡ bỏ vĩnh viễn sau 24 giờ. Bạn có thể khôi phục lại nó trong khoảng thời gian này.
         </p>
 
         {/* Action Buttons */}
@@ -33,7 +32,7 @@ const DeleteConfirmationModal = ({
             onClick={onClose}
             className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-md text-white transition"
           >
-            Cancel
+            Hủy
           </button>
           <button
             onClick={!product?.isDeleted ? onConfirm : onRestore}
@@ -43,7 +42,7 @@ const DeleteConfirmationModal = ({
                 : "bg-red-600 hover:bg-red-700"
             } px-4 py-2 rounded-md text-white font-semibold transition`}
           >
-            {product?.isDeleted ? "Restore" : "Delete"}
+            {product?.isDeleted ? "Khôi phục" : "Xóa"}
           </button>
         </div>
       </div>

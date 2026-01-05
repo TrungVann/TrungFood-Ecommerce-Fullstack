@@ -27,7 +27,7 @@ const updateProfilePicture = async ({
   editType: "cover" | "avatar";
   imageUrl: string;
 }) => {
-  if (!editType || !imageUrl) throw new Error("Missing required fields!");
+  if (!editType || !imageUrl) throw new Error("Thiếu các trường bắt buộc!");
 
   const response = await axiosInstance.put("/seller/api/update-image", {
     editType,
@@ -105,7 +105,7 @@ const ImageEditModal = ({ editType, onClose }: ImageEditModalProps) => {
   const { mutate: updatePicture } = useMutation({
     mutationFn: updateProfilePicture,
     onSuccess: (data) => {
-      toast.success(data.message || "Profile updated successfully!");
+      toast.success(data.message || "Thông tin cá nhân đã được cập nhật!");
 
       queryClient.invalidateQueries({ queryKey: ["seller"] });
 
@@ -113,7 +113,7 @@ const ImageEditModal = ({ editType, onClose }: ImageEditModalProps) => {
     },
     onError: (error: any) => {
       toast.error(
-        error?.response?.data?.message || "Failed to update profile!"
+        error?.response?.data?.message || "Cập nhật thông tin cá nhân thất bại!"
       );
     },
   });
@@ -142,7 +142,7 @@ const ImageEditModal = ({ editType, onClose }: ImageEditModalProps) => {
             ) : (
               <>
                 <UploadCloud size={30} />
-                <p className="text-gray-400">Click to upload</p>
+                <p className="text-gray-400">Chọn để tải lên</p>
               </>
             )}
             <input
@@ -173,7 +173,7 @@ const ImageEditModal = ({ editType, onClose }: ImageEditModalProps) => {
         {imageUrl && (
           <div className="mt-4 space-y-2">
             <h3 className="text-white text-sm font-semibold">
-              AI Enhancements
+              Cải tiến bằng AI
             </h3>
             <div className="grid grid-cols-2 gap-3 max-h-[250px] overflow-y-auto">
               {enhancements.map(({ label, effect }) => (
@@ -210,7 +210,7 @@ const ImageEditModal = ({ editType, onClose }: ImageEditModalProps) => {
               setActiveEffect(null);
             }}
           >
-            <Trash2 size={18} /> Reset
+            <Trash2 size={18} /> Đặt lại
           </button>
 
           <button
@@ -218,7 +218,7 @@ const ImageEditModal = ({ editType, onClose }: ImageEditModalProps) => {
             onClick={handleUpdate}
             disabled={!imageUrl || processing}
           >
-            Save Image
+            Lưu ảnh
           </button>
         </div>
       </div>
