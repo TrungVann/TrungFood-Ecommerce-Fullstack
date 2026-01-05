@@ -444,6 +444,180 @@ export const getAllNotifications = async (
 };
 
 /**
+ * ===== DELETE CATEGORY =====
+ */
+export const deleteCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { category } = req.body;
+
+    if (!category) {
+      return next(new ValidationError("Category name is required"));
+    }
+
+    const config = await prisma.site_config.findFirst();
+    if (!config) {
+      return next(new ValidationError("Site config not found"));
+    }
+
+    const updatedCategories = config.categories.filter((c: string) => c !== category);
+    const updatedSubCategories = { ...config.subCategories };
+    delete updatedSubCategories[category];
+
+    await prisma.site_config.update({
+      where: { id: config.id },
+      data: {
+        categories: updatedCategories,
+        subCategories: updatedSubCategories,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Category deleted successfully",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+/**
+ * ===== UPDATE CATEGORY =====
+ */
+export const updateCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { oldCategory, newCategory } = req.body;
+
+    if (!oldCategory || !newCategory) {
+      return next(new ValidationError("Old and new category names are required"));
+    }
+
+    const config = await prisma.site_config.findFirst();
+    if (!config) {
+      return next(new ValidationError("Site config not found"));
+    }
+
+    const updatedCategories = config.categories.map((c: string) =>
+      c === oldCategory ? newCategory : c
+    );
+
+    const updatedSubCategories = { ...config.subCategories };
+    if (updatedSubCategories[oldCategory]) {
+      updatedSubCategories[newCategory] = updatedSubCategories[oldCategory];
+      delete updatedSubCategories[oldCategory];
+    }
+
+    await prisma.site_config.update({
+      where: { id: config.id },
+      data: {
+        categories: updatedCategories,
+        subCategories: updatedSubCategories,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Category updated successfully",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+/**
+ * ===== DELETE SUBCATEGORY =====
+ */
+export const deleteSubCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { category, subCategory } = req.body;
+
+    if (!category || !subCategory) {
+      return next(new ValidationError("Category and subcategory names are required"));
+    }
+
+    const config = await prisma.site_config.findFirst();
+    if (!config) {
+      return next(new ValidationError("Site config not found"));
+    }
+
+    const updatedSubCategories = { ...config.subCategories };
+    if (updatedSubCategories[category]) {
+      updatedSubCategories[category] = updatedSubCategories[category].filter(
+        (s: string) => s !== subCategory
+      );
+    }
+
+    await prisma.site_config.update({
+      where: { id: config.id },
+      data: {
+        subCategories: updatedSubCategories,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Subcategory deleted successfully",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+/**
+ * ===== UPDATE SUBCATEGORY =====
+ */
+export const updateSubCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { category, oldSubCategory, newSubCategory } = req.body;
+
+    if (!category || !oldSubCategory || !newSubCategory) {
+      return next(new ValidationError("Category, old and new subcategory names are required"));
+    }
+
+    const config = await prisma.site_config.findFirst();
+    if (!config) {
+      return next(new ValidationError("Site config not found"));
+    }
+
+    const updatedSubCategories = { ...config.subCategories };
+    if (updatedSubCategories[category]) {
+      updatedSubCategories[category] = updatedSubCategories[category].map(
+        (s: string) => (s === oldSubCategory ? newSubCategory : s)
+      );
+    }
+
+    await prisma.site_config.update({
+      where: { id: config.id },
+      data: {
+        subCategories: updatedSubCategories,
+      },
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "Subcategory updated successfully",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+/**
  * ===== GET USER NOTIFICATIONS =====
  * Mục đích:
  * - Lấy notifications của user hiện tại

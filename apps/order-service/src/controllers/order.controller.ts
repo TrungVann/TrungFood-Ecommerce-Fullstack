@@ -34,7 +34,9 @@ export const createPaymentIntent = async (
 
   if (existingPaymentIntentId) {
     try {
-      const existingIntent = await stripe.paymentIntents.retrieve(existingPaymentIntentId);
+      const existingIntent = await stripe.paymentIntents.retrieve(
+        existingPaymentIntentId
+      );
       console.log("Returning existing payment intent:", existingIntent.id);
       return res.send({
         clientSecret: existingIntent.client_secret,
@@ -46,7 +48,7 @@ export const createPaymentIntent = async (
   }
 
   // Convert VND amount to USD cents for Stripe
-  const customerAmountUSD = Math.round(amount / USD_TO_VND_RATE * 100);
+  const customerAmountUSD = Math.round((amount / USD_TO_VND_RATE) * 100);
   const platformFeeUSD = Math.floor(customerAmountUSD * 0.1);
 
   console.log(sellerStripeAccountId);

@@ -92,19 +92,19 @@ const Page = () => {
       <div className="w-[90%] lg:w-[80%] m-auto">
         <div className="pb-[50px]">
           <h1 className="md:pt-[40px] font-medium text-[44px] leading-1 mb-[14px] font-jost">
-            All Products
+            Tất cả sản phẩm
           </h1>
           <Link href="/" className="text-[#55585b] hover:underline">
-            Home
+            Trang chủ
           </Link>
           <span className="inline-block p-[1.5px] mx-1 bg-[#a8acb0] rounded-full"></span>
-          <span className="text-[#55585b]">All Products</span>
+          <span className="text-[#55585b]">Tất cả sản phẩm</span>
         </div>
 
         <div className="w-full flex flex-col lg:flex-row gap-8">
           {/* sidebar */}
           <aside className="w-full lg:w-[270px] !rounded bg-white p-4 space-y-6 shadow-md">
-            <h3 className="text-xl font-Poppins font-medium">Price Filter</h3>
+            <h3 className="text-xl font-Poppins font-medium">Lọc theo giá</h3>
             <div className="ml-2">
               <Range
                 step={1}
@@ -155,7 +155,7 @@ const Page = () => {
               {/* Price range */}
               <div className="flex flex-col">
                 <span className="text-[11px] uppercase tracking-wide text-orange-400">
-                  Price range
+                  Khoảng giá
                 </span>
                 <span className="text-sm font-semibold text-gray-800">
                   ${tempPriceRange[0]}
@@ -172,7 +172,7 @@ const Page = () => {
                 }}
                 className="relative overflow-hidden rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-2 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:from-orange-600 hover:to-orange-700 hover:shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
               >
-                <span className="relative z-10">Apply</span>
+                <span className="relative z-10">Áp dụng</span>
 
                 {/* shine effect */}
                 <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 hover:translate-x-full" />
@@ -181,11 +181,11 @@ const Page = () => {
 
             {/* Categories */}
             <h3 className="text-xl font-Poppins font-medium border-b border-b-slate-300 pb-1">
-              Categories
+              Danh mục
             </h3>
             <ul className="space-y-2 !mt-3">
               {isLoading ? (
-                <p>Loading...</p>
+                <p>Đang tải...</p>
               ) : (
                 data?.categories?.map((category: any) => (
                   <li
@@ -208,7 +208,7 @@ const Page = () => {
 
             {/* Sizes */}
             <h3 className="text-xl font-Poppins font-medium border-b border-b-slate-300 pb-1 mt-6">
-              Filter by Size
+              Lọc theo kích thước
             </h3>
             <ul className="space-y-2 !mt-3">
               {sizes.map((size) => (
@@ -265,11 +265,12 @@ const Page = () => {
 
                 {/* Text */}
                 <h3 className="text-lg font-semibold text-gray-800">
-                  No products found
+                  Không tìm thấy sản phẩm phù hợp
                 </h3>
                 <p className="mt-1 max-w-sm text-sm text-gray-500">
-                  We couldn’t find any products matching your filters. Try
-                  adjusting your search or price range.
+                  Chúng tôi không thể tìm thấy bất kỳ sản phẩm nào phù hợp với
+                  bộ lọc của bạn. Vui lòng thử điều chỉnh tìm kiếm hoặc phạm vi
+                  giá!
                 </p>
 
                 {/* Action */}
@@ -283,7 +284,7 @@ const Page = () => {
                   }}
                   className="mt-5 rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-2 text-sm font-semibold text-white shadow-md transition hover:from-orange-600 hover:to-orange-700 active:scale-95"
                 >
-                  Reset Filters
+                  Đặt lại bộ lọc
                 </button>
               </div>
             )}

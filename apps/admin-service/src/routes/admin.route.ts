@@ -3,6 +3,8 @@ import isAuthenticated from "@packages/middleware/isAuthenticated";
 import express, { Router } from "express";
 import {
   addNewAdmin,
+  deleteCategory,
+  deleteSubCategory,
   getAllAdmins,
   getAllCustomizations,
   getAllEvents,
@@ -11,6 +13,9 @@ import {
   getAllSellers,
   getAllUsers,
   getUserNotifications,
+  updateCategory,
+  updateSiteConfig,
+  updateSubCategory,
 } from "../controllers/admin.controller";
 
 const router: Router = express.Router();
@@ -28,6 +33,16 @@ router.get(
   isAdmin,
   getAllNotifications
 );
+router.put("/update-site-config", isAuthenticated, isAdmin, updateSiteConfig);
+router.delete("/delete-category", isAuthenticated, isAdmin, deleteCategory);
+router.put("/update-category", isAuthenticated, isAdmin, updateCategory);
+router.delete(
+  "/delete-subcategory",
+  isAuthenticated,
+  isAdmin,
+  deleteSubCategory
+);
+router.put("/update-subcategory", isAuthenticated, isAdmin, updateSubCategory);
 router.get("/get-user-notifications", isAuthenticated, getUserNotifications);
 
 export default router;

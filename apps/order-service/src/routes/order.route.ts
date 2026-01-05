@@ -19,7 +19,11 @@ const router: Router = express.Router();
 
 router.post("/create-payment-intent", isAuthenticated, createPaymentIntent);
 router.post("/create-payment-session", isAuthenticated, createPaymentSession);
-router.post("/create-order-from-session", isAuthenticated, createOrderFromSession);
+router.post(
+  "/create-order-from-session",
+  isAuthenticated,
+  createOrderFromSession
+);
 router.get(
   "/verifying-payment-session",
   isAuthenticated,

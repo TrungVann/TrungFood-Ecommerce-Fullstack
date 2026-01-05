@@ -20,6 +20,22 @@ const Customization = () => {
   const [newSubCategory, setNewSubCategory] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
+  // Edit states
+  const [editingCategory, setEditingCategory] = useState<string | null>(null);
+  const [editingSubCategory, setEditingSubCategory] = useState<{
+    category: string;
+    sub: string;
+  } | null>(null);
+  const [editCategoryValue, setEditCategoryValue] = useState("");
+  const [editSubCategoryValue, setEditSubCategoryValue] = useState("");
+
+  // Delete confirmation
+  const [deleteConfirm, setDeleteConfirm] = useState<{
+    type: "category" | "subcategory";
+    category: string;
+    sub?: string;
+  } | null>(null);
+
   useEffect(() => {
     const fetchCustomization = async () => {
       try {
@@ -68,6 +84,93 @@ const Customization = () => {
     }
   };
 
+  const handleEditCategory = async () => {
+    if (!editingCategory || !editCategoryValue.trim()) return;
+    try {
+      await axiosInstance.put("/admin/api/update-category", {
+        oldCategory: editingCategory,
+        newCategory: editCategoryValue,
+      });
+      setCategories((prev) =>
+        prev.map((cat) => (cat === editingCategory ? editCategoryValue : cat))
+      );
+      if (subCategories[editingCategory]) {
+        setSubCategories((prev) => {
+          const updated = { ...prev };
+          updated[editCategoryValue] = updated[editingCategory];
+          delete updated[editingCategory];
+          return updated;
+        });
+      }
+      setEditingCategory(null);
+      setEditCategoryValue("");
+    } catch (error) {
+      console.error("Error updating category", error);
+    }
+  };
+
+  const handleDeleteCategory = async () => {
+    if (!deleteConfirm || deleteConfirm.type !== "category") return;
+    try {
+      await axiosInstance.delete("/admin/api/delete-category", {
+        data: { category: deleteConfirm.category },
+      });
+      setCategories((prev) =>
+        prev.filter((cat) => cat !== deleteConfirm.category)
+      );
+      setSubCategories((prev) => {
+        const updated = { ...prev };
+        delete updated[deleteConfirm.category];
+        return updated;
+      });
+      setDeleteConfirm(null);
+    } catch (error) {
+      console.error("Error deleting category", error);
+    }
+  };
+
+  const handleEditSubCategory = async () => {
+    if (!editingSubCategory || !editSubCategoryValue.trim()) return;
+    try {
+      await axiosInstance.put("/admin/api/update-subcategory", {
+        category: editingSubCategory.category,
+        oldSubCategory: editingSubCategory.sub,
+        newSubCategory: editSubCategoryValue,
+      });
+      setSubCategories((prev) => ({
+        ...prev,
+        [editingSubCategory.category]: prev[editingSubCategory.category].map(
+          (sub) => (sub === editingSubCategory.sub ? editSubCategoryValue : sub)
+        ),
+      }));
+      setEditingSubCategory(null);
+      setEditSubCategoryValue("");
+    } catch (error) {
+      console.error("Error updating subcategory", error);
+    }
+  };
+
+  const handleDeleteSubCategory = async () => {
+    if (!deleteConfirm || deleteConfirm.type !== "subcategory") return;
+    try {
+      await axiosInstance.delete("/admin/api/delete-subcategory", {
+        data: {
+          category: deleteConfirm.category,
+          subCategory: deleteConfirm.sub,
+        },
+      });
+      setSubCategories((prev) => ({
+        ...prev,
+        [deleteConfirm.category]: prev[deleteConfirm.category].filter(
+          (sub) => sub !== deleteConfirm.sub
+        ),
+      }));
+      setDeleteConfirm(null);
+    } catch (error) {
+      console.error("Error deleting subcategory", error);
+    }
+  };
+
   return (
     <div className="w-full min-h-screen p-8">
       <h2 className="text-2xl text-white font-semibold mb-2">Customization</h2>
@@ -99,12 +202,133 @@ const Customization = () => {
               <p className="text-gray-400">No categories found.</p>
             ) : (
               categories.map((cat, idx) => (
-                <div key={idx}>
-                  <p className="font-semibold mb-1">{cat}</p>
+                <div
+                  key={idx}
+                  className="border border-gray-600 rounded-md p-4 mb-4"
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    {editingCategory === cat ? (
+                      <div className="flex items-center gap-2 flex-1">
+                        <input
+                          type="text"
+                          value={editCategoryValue}
+                          onChange={(e) => setEditCategoryValue(e.target.value)}
+                          className="px-3 py-1 rounded-md outline-none text-sm bg-gray-700 text-white border border-gray-500 flex-1"
+                          autoFocus
+                        />
+                        <button
+                          onClick={handleEditCategory}
+                          className="text-xs bg-green-600 hover:bg-green-700 px-2 py-1 rounded-md"
+                        >
+                          Save
+                        </button>
+                        <button
+                          onClick={() => {
+                            setEditingCategory(null);
+                            setEditCategoryValue("");
+                          }}
+                          className="text-xs bg-gray-600 hover:bg-gray-700 px-2 py-1 rounded-md"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        <p className="font-semibold">{cat}</p>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => {
+                              setEditingCategory(cat);
+                              setEditCategoryValue(cat);
+                            }}
+                            className="text-xs bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded-md"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() =>
+                              setDeleteConfirm({
+                                type: "category",
+                                category: cat,
+                              })
+                            }
+                            className="text-xs bg-red-600 hover:bg-red-700 px-2 py-1 rounded-md"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
                   {subCategories?.[cat]?.length > 0 ? (
-                    <ul className="ml-4 text-sm text-gray-400 list-disc">
+                    <ul className="ml-4 text-sm text-gray-400 list-disc space-y-1">
                       {subCategories[cat].map((sub, i) => (
-                        <li key={i}>{sub}</li>
+                        <li
+                          key={i}
+                          className="flex items-center justify-between"
+                        >
+                          {editingSubCategory?.category === cat &&
+                          editingSubCategory?.sub === sub ? (
+                            <div className="flex items-center gap-2 flex-1">
+                              <input
+                                type="text"
+                                value={editSubCategoryValue}
+                                onChange={(e) =>
+                                  setEditSubCategoryValue(e.target.value)
+                                }
+                                className="px-3 py-1 rounded-md outline-none text-sm bg-gray-700 text-white border border-gray-500 flex-1"
+                                autoFocus
+                              />
+                              <div className="flex gap-1">
+                                <button
+                                  onClick={handleEditSubCategory}
+                                  className="text-xs bg-green-600 hover:bg-green-700 px-2 py-1 rounded-md"
+                                >
+                                  Save
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    setEditingSubCategory(null);
+                                    setEditSubCategoryValue("");
+                                  }}
+                                  className="text-xs bg-gray-600 hover:bg-gray-700 px-2 py-1 rounded-md"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <>
+                              <span>{sub}</span>
+                              <div className="flex gap-1">
+                                <button
+                                  onClick={() => {
+                                    setEditingSubCategory({
+                                      category: cat,
+                                      sub,
+                                    });
+                                    setEditSubCategoryValue(sub);
+                                  }}
+                                  className="text-xs bg-blue-600 hover:bg-blue-700 px-2 py-1 rounded-md"
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    setDeleteConfirm({
+                                      type: "subcategory",
+                                      category: cat,
+                                      sub,
+                                    })
+                                  }
+                                  className="text-xs bg-red-600 hover:bg-red-700 px-2 py-1 rounded-md"
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </>
+                          )}
+                        </li>
                       ))}
                     </ul>
                   ) : (
@@ -242,6 +466,46 @@ const Customization = () => {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {deleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 p-6 rounded-lg max-w-md w-full mx-4">
+            <h3 className="text-lg font-semibold text-white mb-4">
+              Confirm Delete
+            </h3>
+            <p className="text-gray-300 mb-6">
+              Are you sure you want to delete{" "}
+              <span className="font-semibold text-white">
+                {deleteConfirm.type === "category"
+                  ? `category "${deleteConfirm.category}"`
+                  : `subcategory "${deleteConfirm.sub}" from "${deleteConfirm.category}"`}
+              </span>
+              ?{" "}
+              {deleteConfirm.type === "category" &&
+                "This will also delete all its subcategories."}
+            </p>
+            <div className="flex gap-3 justify-end">
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-md transition"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={
+                  deleteConfirm.type === "category"
+                    ? handleDeleteCategory
+                    : handleDeleteSubCategory
+                }
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md transition"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

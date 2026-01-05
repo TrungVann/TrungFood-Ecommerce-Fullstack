@@ -153,16 +153,16 @@ const AllProductsPage = () => {
   return (
     <div className="w-full min-h-screen p-8 bg-black text-white text-sm">
       <div className="flex justify-between items-center mb-3">
-        <h2 className="text-xl font-bold tracking-wide">All Products</h2>
+        <h2 className="text-xl font-bold tracking-wide">Tất cả sản phẩm</h2>
         <button
           onClick={exportCSV}
           className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm flex items-center gap-2"
         >
-          <Download size={16} /> Export CSV
+          <Download size={16} /> xuất CSV
         </button>
       </div>
 
-      <BreadCrumbs title="All Products" />
+      <BreadCrumbs title="Tất cả sản phẩm" />
 
       <div className="my-4 flex items-center bg-gray-900 p-2 rounded-md flex-1">
         <Search size={18} className="text-gray-400 mr-2" />
