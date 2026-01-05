@@ -224,6 +224,7 @@ model orders {
   discountAmount    Float?
   status            String
   deliveryStatus    String       @default("Ordered")
+  paymentSessionId  String?      // To prevent duplicates via code check
   items             orderItems[] @relation("OrderItemsRelation")
 
   createdAt DateTime @default(now())

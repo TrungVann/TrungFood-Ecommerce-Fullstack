@@ -30,6 +30,8 @@ const ProductCard = ({
   const cart = useStore((state: any) => state.cart);
   const isInCart = cart.some((item: any) => item.id === product.id);
 
+  const USD_TO_VND_RATE = 26000;
+
   useEffect(() => {
     if (isEvent && product?.ending_date) {
       const interval = setInterval(() => {
@@ -101,10 +103,14 @@ const ProductCard = ({
       <div className="mt-3 flex justify-between items-center px-2">
         <div className="flex items-center gap-2">
           <span className="text-lg font-bold text-gray-900">
-            ${product?.sale_price}
+            ${(product?.sale_price * USD_TO_VND_RATE)?.toLocaleString("vi-VN")}₫
           </span>
           <span className="text-sm line-through text-gray-400">
-            ${product?.regular_price}
+            $
+            {(product?.regular_price * USD_TO_VND_RATE)?.toLocaleString(
+              "vi-VN"
+            )}
+            ₫
           </span>
         </div>
         <span className="text-green-500 text-sm font-medium">

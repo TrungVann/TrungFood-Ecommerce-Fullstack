@@ -17,6 +17,8 @@ const WishlistPage = () => {
   const removeFromWishlist = useStore((state: any) => state.removeFromWishlist);
   const wishlist = useStore((state: any) => state.wishlist);
 
+  const USD_TO_VND_RATE = 26000; // 1 USD = 26000 VND
+
   const decreaseQuantity = (id: string) => {
     useStore.setState((state: any) => ({
       wishlist: state.wishlist.map((item: any) =>
@@ -92,7 +94,11 @@ const WishlistPage = () => {
                       <span>{item.title}</span>
                     </td>
                     <td className="px-6 text-lg">
-                      ${item?.sale_price.toFixed(2)}
+                      {" "}
+                      {Math.round(
+                        item?.sale_price * USD_TO_VND_RATE
+                      ).toLocaleString("vi-VN")}{" "}
+                      ₫
                     </td>
                     <td>
                       <div className="flex justify-center items-center border border-gray-200 rounded-[20px] w-[90px] p-[2px]">

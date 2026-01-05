@@ -26,6 +26,8 @@ const CartPage = () => {
   const [error, setError] = useState("");
   const [storedCouponCode, setStoredCouponCode] = useState("");
 
+  const USD_TO_VND_RATE = 26000; // 1 USD = 26000 VND
+
   const couponCodeApplyHandler = async () => {
     setError("");
 
@@ -227,7 +229,13 @@ const CartPage = () => {
                           </span>
                         </div>
                       ) : (
-                        <span>${item.sale_price.toFixed(2)}</span>
+                        <span>
+                          {" "}
+                          {Math.round(
+                            item?.sale_price * USD_TO_VND_RATE
+                          ).toLocaleString("vi-VN")}{" "}
+                          ₫
+                        </span>
                       )}
                     </td>
                     <td>
@@ -267,14 +275,24 @@ const CartPage = () => {
                     Giảm giá ({discountPercent}%)
                   </span>
                   <span className="text-green-600">
-                    - ${discountAmount.toFixed(2)}
+                    -{" "}
+                    {Math.round(
+                      discountAmount * USD_TO_VND_RATE
+                    ).toLocaleString("vi-VN")}{" "}
+                    ₫
                   </span>
                 </div>
               )}
 
               <div className="flex justify-between items-center text-[#010f1c] text-[20px] font-[550] pb-3">
                 <span className="font-jost">Tổng tiền</span>
-                <span>${(subtotal - discountAmount).toFixed(2)}</span>
+                <span>
+                  {(
+                    (subtotal - discountAmount) *
+                    USD_TO_VND_RATE
+                  ).toLocaleString("vi-VN")}{" "}
+                  ₫
+                </span>
               </div>
               <hr className="my-4 text-slate-200" />
 
@@ -343,7 +361,13 @@ const CartPage = () => {
 
                 <div className="flex justify-between items-center text-[#010f1c] text-[20px] font-[550] pb-3">
                   <span className="font-jost">Tổng</span>
-                  <span>${(subtotal - discountAmount).toFixed(2)}</span>
+                  <span>
+                    {(
+                      (subtotal - discountAmount) *
+                      USD_TO_VND_RATE
+                    ).toLocaleString("vi-VN")}{" "}
+                    ₫
+                  </span>
                 </div>
 
                 <button

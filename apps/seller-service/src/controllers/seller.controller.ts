@@ -523,7 +523,7 @@ export const sellerNotifications = async (
         receiverId: sellerId,
       },
       orderBy: {
-        cratedAt: "desc",
+        createdAt: "desc",
       },
     });
 

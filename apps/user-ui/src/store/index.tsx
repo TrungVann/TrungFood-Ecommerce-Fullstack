@@ -6,12 +6,9 @@ type Product = {
   id: string;
   title: string;
   price: number;
-  image: string;
+  image: string[];
   quantity?: number;
   shopId: string;
-  selectedOptions?: {
-    size?: string;
-  };
 };
 
 type Store = {

@@ -29,22 +29,39 @@ export const createPaymentIntent = async (
     sessionId,
   });
 
-  const customerAmount = Math.round(amount * USD_TO_VND_RATE);
-  const platformFee = Math.floor(customerAmount * 0.1);
+  const paymentIntentKey = `paymentIntent:${sessionId}`;
+  const existingPaymentIntentId = await redis.get(paymentIntentKey);
+
+  if (existingPaymentIntentId) {
+    try {
+      const existingIntent = await stripe.paymentIntents.retrieve(existingPaymentIntentId);
+      console.log("Returning existing payment intent:", existingIntent.id);
+      return res.send({
+        clientSecret: existingIntent.client_secret,
+      });
+    } catch (error) {
+      console.error("Existing payment intent not found, creating new:", error);
+      await redis.del(paymentIntentKey);
+    }
+  }
+
+  // Convert VND amount to USD cents for Stripe
+  const customerAmountUSD = Math.round(amount / USD_TO_VND_RATE * 100);
+  const platformFeeUSD = Math.floor(customerAmountUSD * 0.1);
 
   console.log(sellerStripeAccountId);
 
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: customerAmount,
-      currency: "vnd",
+      amount: customerAmountUSD,
+      currency: "usd",
       payment_method_types: ["card"],
 
       //bắt buộc khi connected account khác region
       on_behalf_of: sellerStripeAccountId,
 
       //platform thu phí
-      application_fee_amount: platformFee,
+      application_fee_amount: platformFeeUSD,
 
       //tiền chuyển cho seller
       transfer_data: {
@@ -56,6 +73,7 @@ export const createPaymentIntent = async (
       },
     });
     console.log("Payment intent created:", paymentIntent.id);
+    await redis.setex(paymentIntentKey, 3600, paymentIntent.id); // Store for 1 hour
     res.send({
       clientSecret: paymentIntent.client_secret,
     });

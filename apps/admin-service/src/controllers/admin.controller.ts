@@ -266,6 +266,52 @@ export const getAllCustomizations = async (
 };
 
 /**
+ * ===== UPDATE SITE CONFIG =====
+ * Mục đích:
+ * - Cập nhật categories và subCategories
+ */
+export const updateSiteConfig = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { categories, subCategories } = req.body;
+
+    if (!Array.isArray(categories)) {
+      return next(new ValidationError("Categories must be an array"));
+    }
+
+    const config = await prisma.site_config.findFirst();
+    if (!config) {
+      // Create new config if not exists
+      await prisma.site_config.create({
+        data: {
+          categories,
+          subCategories: subCategories || {},
+        },
+      });
+    } else {
+      // Update existing
+      await prisma.site_config.update({
+        where: { id: config.id },
+        data: {
+          categories,
+          subCategories: subCategories || {},
+        },
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Site config updated successfully",
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+/**
  * ===== GET ALL USERS =====
  * Mục đích:
  * - Lấy danh sách user (không bao gồm dữ liệu nhạy cảm)
@@ -415,7 +461,7 @@ export const getUserNotifications = async (
         receiverId: req.user.id,
       },
       orderBy: {
-        cratedAt: "desc",
+        createdAt: "desc",
       },
     });
 
