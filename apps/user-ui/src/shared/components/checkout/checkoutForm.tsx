@@ -46,7 +46,7 @@ const CheckoutForm = ({
     if (result.error) {
       console.error("Payment error:", result.error);
       setStatus("failed");
-      setErrorMsg(result.error.message || "Something went wrong.");
+      setErrorMsg(result.error.message || "Có lỗi xảy ra!.");
     } else {
       console.log("Payment success");
       setStatus("success");
@@ -69,7 +69,7 @@ const CheckoutForm = ({
         onSubmit={handleSubmit}
       >
         <h2 className="text-3xl font-bold text-center mb-2">
-          Secure Payment Checkout
+          Thanh toán an toàn
         </h2>
 
         {/* Dynamic Order Summary */}
@@ -86,7 +86,7 @@ const CheckoutForm = ({
           <div className="flex justify-between font-semibold pt-2 border-t border-t-gray-300 mt-2">
             {!!coupon?.discountAmount && (
               <>
-                <span>Discount</span>
+                <span>Giảm giá</span>
                 <span className="text-green-600">
                   ${coupon?.discountAmount?.toFixed(2)}
                 </span>
@@ -95,7 +95,7 @@ const CheckoutForm = ({
           </div>
 
           <div className="flex justify-between font-semibold mt-2">
-            <span>Total</span>
+            <span>Tổng</span>
             <span>${(total - (coupon?.discountAmount || 0)).toFixed(2)}</span>
           </div>
         </div>
@@ -107,7 +107,7 @@ const CheckoutForm = ({
           className="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition flex items-center justify-center gap-2 disabled:opacity-60"
         >
           {loading && <Loader2 className="animate-spin w-5 h-5" />}
-          {loading ? "Processing..." : "Pay Now"}
+          {loading ? "Đang xử lý..." : "Thanh toán ngay"}
         </button>
 
         {errorMsg && (
@@ -120,14 +120,14 @@ const CheckoutForm = ({
         {status === "success" && (
           <div className="flex items-center gap-2 text-green-600 text-sm justify-center">
             <CheckCircle className="w-5 h-5" />
-            Payment successful!
+            Thanh toán thành công!
           </div>
         )}
 
         {status === "failed" && (
           <div className="flex items-center gap-2 text-red-600 text-sm justify-center">
             <XCircle className="w-5 h-5" />
-            Payment failed. Please try again.
+            Thanh toán thất bại. Vui lòng thử lại!.
           </div>
         )}
       </form>

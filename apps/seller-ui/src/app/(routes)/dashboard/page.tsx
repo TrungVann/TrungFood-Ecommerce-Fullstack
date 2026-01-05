@@ -39,19 +39,19 @@ const orders = [
 const columns = [
   {
     accessorKey: "id",
-    header: "Order ID",
+    header: "ID Đơn hàng",
   },
   {
     accessorKey: "customer",
-    header: "Customer",
+    header: "Khách hàng",
   },
   {
     accessorKey: "amount",
-    header: "Amount",
+    header: "Tổng",
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: "Trạng thái",
     cell: ({ getValue }: any) => {
       const value = getValue();
       const color =

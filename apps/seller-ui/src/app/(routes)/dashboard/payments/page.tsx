@@ -31,7 +31,7 @@ const SellerPayments = () => {
     () => [
       {
         accessorKey: "id",
-        header: "Order ID",
+        header: "ID Đơn hàng",
         cell: ({ row }: any) => (
           <span className="text-white text-sm">
             #{row.original.id.slice(-6).toUpperCase()}
@@ -63,9 +63,7 @@ const SellerPayments = () => {
         cell: ({ row }: any) => {
           const adminFee = row.original.total * 0.1;
           return (
-            <span className="text-yellow-400">
-              ${adminFee.toFixed(2)}
-            </span>
+            <span className="text-yellow-400">${adminFee.toFixed(2)}</span>
           );
         },
       },

@@ -22,7 +22,7 @@ const ChangePassword = () => {
         newPassword: data.newPassword,
         confirmPassword: data?.confirmPassword,
       });
-      setMessage("Password updated successfully!");
+      setMessage("Cập nhật mật khẩu thành công!");
       reset();
     } catch (error: any) {
       setError(error?.response?.data?.message);
@@ -34,19 +34,19 @@ const ChangePassword = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label className="block mb-1 text-sm font-medium text-gray-700">
-            Current Password
+            Mật khẩu hiện tại
           </label>
           <input
             type="password"
             {...register("currentPassword", {
-              required: "Current password is required",
+              required: "Mật khẩu hiện tại không được để trống",
               minLength: {
                 value: 6,
-                message: "Minimum 6 characters required",
+                message: "Tối thiểu 6 kí tự",
               },
             })}
             className="form-input"
-            placeholder="Enter current password"
+            placeholder="Nhập mật khẩu hiện tại"
           />
           {errors.currentPassword?.message && (
             <p className="text-red-500 text-xs mt-1">

@@ -46,11 +46,11 @@ const ForgotPassword = () => {
 
   const requestOtpMutation = useMutation({
     mutationFn: async ({ email }: { email: string }) => {
-      const reponse = await axios.post(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_SERVER_URI}/auth/api/forgot-password-user`,
         { email }
       );
-      return reponse.data;
+      return response.data;
     },
     onSuccess: (_, { email }) => {
       setUserEmail(email);
@@ -83,7 +83,7 @@ const ForgotPassword = () => {
     onError: (error: AxiosError) => {
       const errorMessage = (error.response?.data as { message?: string })
         ?.message;
-      setServerError(errorMessage || "Invalid OTP. Try again!");
+      setServerError(errorMessage || "OTP không hợp lệ. Hãy thử lại!");
     },
   });
 
@@ -99,7 +99,7 @@ const ForgotPassword = () => {
     onSuccess: () => {
       setStep("email");
       toast.success(
-        "Password reset successfully! Please login with your new password."
+        "Mật khẩu đã được đặt lại thành công! Hãy đăng nhập lại với mật khẩu mới của bạn."
       );
       setServerError(null);
       router.push("/login");
@@ -107,7 +107,7 @@ const ForgotPassword = () => {
     onError: (error: AxiosError) => {
       const errorMessage = (error.response?.data as { message?: string })
         ?.message;
-      setServerError(errorMessage || "Failed to reset password. Try again!");
+      setServerError(errorMessage || "Đặt lại mật khẩu thất bại. Hãy thử lại!");
     },
   });
 
@@ -143,10 +143,10 @@ const ForgotPassword = () => {
   return (
     <div className="w-full py-10 min-h-[85vh] bg-[#f1f1f1]">
       <h1 className="text-4xl font-Poppins font-semibold text-black text-center">
-        Forgot Password
+        Quên mật khẩu
       </h1>
       <p className="text-center text-lg font-medium py-3 text-[#00000099]">
-        Home . Forgot-password
+        Trang chủ . Quên mật khẩu
       </p>
 
       <div className="w-full flex justify-center">
@@ -154,12 +154,12 @@ const ForgotPassword = () => {
           {step === "email" && (
             <>
               <h3 className="text-3xl font-semibold text-center mb-2">
-                Login to TrungFood
+                Đăng nhập vào TrungFood
               </h3>
               <p className="text-center text-gray-500 mb-4">
-                Go back to?{" "}
+                Quay lại?{" "}
                 <Link href={"/login"} className="text-[#FF541B]">
-                  Login
+                  Đăng nhập
                 </Link>
               </p>
 
@@ -170,11 +170,11 @@ const ForgotPassword = () => {
                   placeholder="abcxyz@gmail.com"
                   className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
                   {...register("email", {
-                    required: "Email is required",
+                    required: "Email không được để trống",
                     pattern: {
                       value:
                         /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/,
-                      message: "Invalid email address",
+                      message: "Email không hợp lệ",
                     },
                   })}
                 />
@@ -189,7 +189,7 @@ const ForgotPassword = () => {
                   disabled={requestOtpMutation.isPending}
                   className="w-full text-lg cursor-pointer mt-4 bg-[#FF541B] text-white py-2 rounded-lg"
                 >
-                  {requestOtpMutation.isPending ? "Sending OTP..." : "Submit"}
+                  {requestOtpMutation.isPending ? "Đang gửi OTP..." : "Gửi"}
                 </button>
 
                 {serverError && (
@@ -202,7 +202,7 @@ const ForgotPassword = () => {
           {step === "otp" && (
             <>
               <h3 className="text-xl font-semibold text-center mb-4">
-                Enter OTP
+                Nhập OTP
               </h3>
               <div className="flex justify-center gap-6">
                 {otp.map((digit, index) => (
@@ -225,7 +225,9 @@ const ForgotPassword = () => {
                 className="w-full mt-4 text-lg cursor-pointer bg-[#FF541B] text-white py-2 rounded-lg"
                 disabled={verifyOtpMutation.isPending}
               >
-                {verifyOtpMutation.isPending ? "Verifying..." : "Verify OTP"}
+                {verifyOtpMutation.isPending
+                  ? "Đang xác minh..."
+                  : "Xác minh OTP"}
               </button>
 
               {canResend ? (
@@ -235,11 +237,11 @@ const ForgotPassword = () => {
                   }
                   className="text-[#FF541B] text-center mt-4 cursor-pointer"
                 >
-                  Resend OTP
+                  Gửi lại OTP
                 </button>
               ) : (
                 <p className="text-center text-sm mt-4">
-                  Resend OTP in {timer}s
+                  Gửi lại OTP trong {timer}s
                 </p>
               )}
 
@@ -252,19 +254,19 @@ const ForgotPassword = () => {
           {step === "reset" && (
             <>
               <h3 className="text-xl font-semibold text-center mb-4">
-                Reset Password
+                Đặt lại mật khẩu
               </h3>
               <form onSubmit={handleSubmit(onSubmitPassword)}>
                 <label className="block text-gray-700 mb-1">New Password</label>
                 <input
                   type="password"
-                  placeholder="Enter new password"
+                  placeholder="Nhập mật khẩu mới"
                   className="w-full p-2 border border-gray-300 outline-0 !rounded mb-1"
                   {...register("password", {
-                    required: "Password is required",
+                    required: "Mật khẩu không được để trống",
                     minLength: {
                       value: 6,
-                      message: "Password must be at least 6 characters",
+                      message: "Mật khẩu phải có ít nhất 6 ký tự",
                     },
                   })}
                 />
@@ -280,8 +282,8 @@ const ForgotPassword = () => {
                   disabled={resetPasswordMutation.isPending}
                 >
                   {resetPasswordMutation.isPending
-                    ? "Resetting..."
-                    : "Reset Password"}
+                    ? "Đang đặt lại..."
+                    : "Đặt lại mật khẩu"}
                 </button>
 
                 {serverError && (

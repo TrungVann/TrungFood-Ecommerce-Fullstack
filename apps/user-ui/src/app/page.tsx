@@ -66,7 +66,7 @@ const Page = () => {
       <div className="md:w-[80%] w-[90%] my-10 m-auto">
         {!isLoading && isLoggedIn && (
           <div className="mb-8">
-            <SectionTitle title="Suggested Products" />
+            <SectionTitle title="Đề xuất sản phẩm" />
           </div>
         )}
 
@@ -105,7 +105,7 @@ const Page = () => {
         )}
 
         <div className="my-8 block">
-          <SectionTitle title="Latest Products" />
+          <SectionTitle title="Sản phẩm mới nhất" />
         </div>
         {!LatestProductsLoading && (
           <div className="m-auto grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 2xl:grid-cols-5 gap-5">
@@ -116,11 +116,11 @@ const Page = () => {
         )}
 
         {latestProducts?.length === 0 && (
-          <p className="text-center">No products Available yet!</p>
+          <p className="text-center">Không có sản phẩm nào!</p>
         )}
 
         <div className="my-8 block">
-          <SectionTitle title="Top Shops" />
+          <SectionTitle title="Cửa hàng đứng đầu" />
         </div>
 
         {!shopLoading && (
@@ -132,11 +132,11 @@ const Page = () => {
         )}
 
         {shops?.length === 0 && (
-          <p className="text-center">No shops Available yet!</p>
+          <p className="text-center">Không có cửa hàng nào!</p>
         )}
 
         <div className="my-8 block">
-          <SectionTitle title="Top offers" />
+          <SectionTitle title="Khuyến mãi hàng đầu" />
         </div>
         {!offersLoading && !isError && (
           <div className="m-auto grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 2xl:grid-cols-5 gap-5">

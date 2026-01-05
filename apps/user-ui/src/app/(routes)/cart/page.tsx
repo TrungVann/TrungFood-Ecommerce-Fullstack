@@ -30,7 +30,7 @@ const CartPage = () => {
     setError("");
 
     if (!couponCode.trim()) {
-      setError("Coupon code is required!");
+      setError("Nhập một mã giảm giá hợp lệ!");
       return;
     }
 
@@ -50,7 +50,10 @@ const CartPage = () => {
         setDiscountAmount(0);
         setDiscountPercent(0);
         setDiscountedProductId("");
-        setError(res.data.message || "Coupon not valid for any items in cart.");
+        setError(
+          res.data.message ||
+            "Mã giảm giá không hợp lệ cho bất kỳ mặt hàng nào trong giỏ hàng."
+        );
       }
     } catch (error: any) {
       setDiscountAmount(0);
@@ -220,7 +223,7 @@ const CartPage = () => {
                             ).toFixed(2)}
                           </span>
                           <span className="text-xs text-green-700 bg-green-100 px-2 py-[2px] rounded-full mt-1">
-                            Discount Applied
+                            Đã áp dụng giảm giá
                           </span>
                         </div>
                       ) : (
@@ -249,7 +252,7 @@ const CartPage = () => {
                         className="text-[#818487] cursor-pointer hover:text-[#ff1826] transition duration-200"
                         onClick={() => removeItem(item?.id)}
                       >
-                        ✕ Remove
+                        ✕ Xóa
                       </button>
                     </td>
                   </tr>
@@ -261,7 +264,7 @@ const CartPage = () => {
               {discountAmount > 0 && (
                 <div className="flex justify-between items-center text-[#010f1c] text-base font-medium pb-1">
                   <span className="font-jost">
-                    Discount ({discountPercent}%)
+                    Giảm giá ({discountPercent}%)
                   </span>
                   <span className="text-green-600">
                     - ${discountAmount.toFixed(2)}

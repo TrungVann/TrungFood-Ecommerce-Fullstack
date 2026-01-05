@@ -38,7 +38,7 @@ const ProductCard = ({
         const diff = endTime - now;
 
         if (diff <= 0) {
-          setTimeLeft("Expired");
+          setTimeLeft("Hết hạn");
           clearInterval(interval);
           return;
         }
@@ -46,7 +46,9 @@ const ProductCard = ({
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((diff / (1000 * 60)) % 60);
-        setTimeLeft(`${days}d ${hours}h ${minutes}m left with this price`);
+        setTimeLeft(
+          `${days} ngày ${hours} giờ ${minutes} phút còn lại với giá này`
+        );
       }, 60000);
       return () => clearInterval(interval);
     }
@@ -57,13 +59,13 @@ const ProductCard = ({
     <div className="w-full min-h-[350px] h-max bg-white rounded-lg relative">
       {isEvent && (
         <div className="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-semibold px-2 py-1 rounded-sm shadow-md">
-          OFFER
+          Khuyến mãi
         </div>
       )}
 
       {product?.stock <= 5 && (
         <div className="absolute top-2 right-2 bg-yellow-400 text-slate-700 text-[10px] font-semibold px-2 py-1 rounded-sm shadow-md">
-          Limited Stock
+          Hàng tồn kho giới hạn
         </div>
       )}
 
@@ -106,7 +108,7 @@ const ProductCard = ({
           </span>
         </div>
         <span className="text-green-500 text-sm font-medium">
-          {product.totalSales} sold
+          {product.totalSales} đã bán
         </span>
       </div>
 

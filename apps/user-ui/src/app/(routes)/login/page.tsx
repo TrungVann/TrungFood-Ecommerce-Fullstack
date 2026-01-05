@@ -50,7 +50,7 @@ const Login = () => {
     onError: (error: AxiosError) => {
       const errorMessage =
         (error.response?.data as { message?: string })?.message ||
-        "Invalid credentials!";
+        "Thông tin đăng nhập không hợp lệ!";
       setServerError(errorMessage);
     },
   });

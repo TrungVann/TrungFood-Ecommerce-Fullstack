@@ -80,7 +80,7 @@ export const userRegistration = async (
     //Check user đã tồn tại chưa
     const existingUser = await prisma.users.findUnique({ where: { email } });
     if (existingUser) {
-      return next(new ValidationError("User already exists with this email!"));
+      return next(new ValidationError("Người dùng đã tồn tại với email này!"));
     }
 
     //Chống spam OTP (rate limit theo email)
@@ -100,7 +100,8 @@ export const userRegistration = async (
     });
 
     res.status(200).json({
-      message: "OTP sent to email. Please verify your account.",
+      message:
+        "OTP đã được gửi đến email. Vui lòng xác minh tài khoản của bạn.",
     });
   } catch (error) {
     return next(error);
@@ -124,7 +125,9 @@ export const verifyUser = async (
   try {
     const { email, otp, password, name } = req.body;
     if (!email || !otp || !password || !name) {
-      return next(new ValidationError("All fields are required!"));
+      return next(
+        new ValidationError("Tất cả các trường không được để trống!")
+      );
     }
 
     const existingUser = await prisma.users.findUnique({ where: { email } });
@@ -160,7 +163,7 @@ export const verifyUser = async (
 
     res.status(201).json({
       success: true,
-      message: "User registered successfully!",
+      message: "Đăng ký tài khoản thành công!",
     });
   } catch (error) {
     return next(error);
@@ -187,22 +190,22 @@ export const loginUser = async (
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return next(new ValidationError("Email and password are required!"));
+      return next(new ValidationError("Email và password là bắt buộc!"));
     }
 
     const user = await prisma.users.findUnique({ where: { email } });
 
-    if (!user) return next(new AuthError("User doesn't exists!"));
+    if (!user) return next(new AuthError("Người dùng không tồn tại!"));
 
     //Verify password
     const isMatch = await bcrypt.compare(password, user.password!);
     if (!isMatch) {
       sendLog({
         type: "error",
-        message: `Login failed: Invalid password for ${email}`,
+        message: `Đăng nhập thất bại: Sai mật khẩu cho ${email}`,
         source: "auth-service",
       });
-      return next(new AuthError("Invalid email or password"));
+      return next(new AuthError("Email hoặc mật khẩu không đúng!"));
     }
 
     sendLog({
@@ -237,7 +240,7 @@ export const loginUser = async (
     setCookie(res, "access_token", accessToken);
 
     res.status(200).json({
-      message: "Login successful!",
+      message: "Đăng nhập thành công!",
       user: { id: user.id, email: user.email, name: user.name },
     });
   } catch (error) {
@@ -279,17 +282,19 @@ export const updateUserPassword = async (
     const { currentPassword, newPassword, confirmPassword } = req.body;
 
     if (!currentPassword || !newPassword || !confirmPassword) {
-      return next(new ValidationError("all fields are required"));
+      return next(
+        new ValidationError("Tất cả các trường không được để trống!")
+      );
     }
 
     if (newPassword !== confirmPassword) {
-      return next(new ValidationError("new passwords do not match"));
+      return next(new ValidationError("Mật khẩu mới không khớp!"));
     }
 
     if (currentPassword === newPassword) {
       return next(
         new ValidationError(
-          "New password cannot be the same as the current password"
+          "Mật khẩu mới không được trùng với mật khẩu hiện tại"
         )
       );
     }
@@ -299,7 +304,11 @@ export const updateUserPassword = async (
     });
 
     if (!user || !user.password) {
-      return next(new AuthError("user not found or password not set"));
+      return next(
+        new AuthError(
+          "Người dùng không tồn tại hoặc mật khẩu chưa được thiết lập"
+        )
+      );
     }
 
     const isPasswordCorrect = await bcrypt.compare(
@@ -307,7 +316,7 @@ export const updateUserPassword = async (
       user.password
     );
     if (!isPasswordCorrect) {
-      return next(new AuthError("current password is incorrect"));
+      return next(new AuthError("Mật khẩu hiện tại không đúng"));
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 12);
@@ -317,7 +326,7 @@ export const updateUserPassword = async (
       data: { password: hashedPassword },
     });
 
-    res.status(200).json({ message: "password updated successfully" });
+    res.status(200).json({ message: "Mật khẩu đã được cập nhật thành công!" });
   } catch (error) {
     next(error);
   }
@@ -341,17 +350,17 @@ export const loginAdmin = async (
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return next(new ValidationError("Email and password are required!"));
+      return next(new ValidationError("Email và mật khẩu là bắt buộc!"));
     }
 
     const user = await prisma.users.findUnique({ where: { email } });
 
-    if (!user) return next(new AuthError("User doesn't exists!"));
+    if (!user) return next(new AuthError("Người dùng không tồn tại!"));
 
     // verify password
     const isMatch = await bcrypt.compare(password, user.password!);
     if (!isMatch) {
-      return next(new AuthError("Invalid email or password"));
+      return next(new AuthError("Email hoặc mật khẩu không đúng!"));
     }
 
     const isAdmin = user.role === "admin";
@@ -359,15 +368,15 @@ export const loginAdmin = async (
     if (!isAdmin) {
       sendLog({
         type: "error",
-        message: `Admin login failed for ${email} — not an admin`,
+        message: `Đăng nhập thất bại với ${email} — không phải quản trị viên`,
         source: "auth-service",
       });
-      return next(new AuthError("Invalid access!"));
+      return next(new AuthError("Truy cập không hợp lệ!"));
     }
 
     sendLog({
       type: "success",
-      message: `Admin login successful: ${email}`,
+      message: `Đăng nhập thành công với tài khoản admin: ${email}`,
       source: "auth-service",
     });
 
@@ -396,7 +405,7 @@ export const loginAdmin = async (
     setCookie(res, "access_token", accessToken);
 
     res.status(200).json({
-      message: "Login successful!",
+      message: "Đăng nhập thành công!",
       user: { id: user.id, email: user.email, name: user.name },
     });
   } catch (error) {
@@ -425,7 +434,9 @@ export const refreshToken = async (
       req.headers.authorization?.split(" ")[1];
 
     if (!refreshToken) {
-      return next(new ValidationError("Unauthorized! No refresh token."));
+      return next(
+        new ValidationError("Không được phép! Không có mã token làm mới.")
+      );
     }
 
     const decoded = jwt.verify(
@@ -434,7 +445,9 @@ export const refreshToken = async (
     ) as { id: string; role: string };
 
     if (!decoded || !decoded.id || !decoded.role) {
-      return next(new JsonWebTokenError("Forbidden! Invalid refresh token."));
+      return next(
+        new JsonWebTokenError("Bị cấm! Mã token làm mới không hợp lệ.")
+      );
     }
 
     let account;
@@ -448,7 +461,7 @@ export const refreshToken = async (
     }
 
     if (!account) {
-      return next(new AuthError("Forbidden! User/Seller not found"));
+      return next(new AuthError("Bị cấm! Không tìm thấy Người dùng/Người bán"));
     }
 
     const newAccessToken = jwt.sign(
@@ -477,7 +490,7 @@ export const getUser = async (req: any, res: Response, next: NextFunction) => {
     const user = req.user;
     await sendLog({
       type: "success",
-      message: `User data retrieved ${user?.email}`,
+      message: `Đã truy xuất dữ liệu người dùng ${user?.email}`,
       source: "auth-service",
     });
 
@@ -500,7 +513,7 @@ export const getAdmin = async (req: any, res: Response, next: NextFunction) => {
 
     await sendLog({
       type: "success",
-      message: `Admin data retrieved ${user?.email}`,
+      message: `Đã truy xuất dữ liệu Quản trị viên ${user?.email}`,
       source: "auth-service",
     });
 
@@ -541,19 +554,20 @@ export const resetUserPassword = async (
     const { email, newPassword } = req.body;
 
     if (!email || !newPassword)
-      return next(new ValidationError("Email and new password are required!"));
+      return next(
+        new ValidationError("Email và mật khẩu không được để trống!")
+      );
 
     const user = await prisma.users.findUnique({ where: { email } });
-    if (!user) return next(new ValidationError("User not found!"));
+    if (!user)
+      return next(new ValidationError("Không tìm thấy người dùng này!"));
 
     // compare new password with the exisiting one
     const isSamePassword = await bcrypt.compare(newPassword, user.password!);
 
     if (isSamePassword) {
       return next(
-        new ValidationError(
-          "New password cannot be the same as the old password!"
-        )
+        new ValidationError("Mật khẩu mới không được trùng với mật khẩu cũ!")
       );
     }
 
@@ -565,7 +579,7 @@ export const resetUserPassword = async (
       data: { password: hashedPassword },
     });
 
-    res.status(200).json({ message: "Password reset successfully!" });
+    res.status(200).json({ message: "Mật khẩu đã được đặt lại thành công!" });
   } catch (error) {
     next(error);
   }
@@ -586,7 +600,7 @@ export const registerSeller = async (
     });
 
     if (existingSeller) {
-      throw new ValidationError("Seller already exists with this email!");
+      throw new ValidationError("Người bán đã tồn tại với email này!!");
     }
 
     await checkOtpRestrictions(email, next);
@@ -595,7 +609,10 @@ export const registerSeller = async (
 
     res
       .status(200)
-      .json({ message: "OTP sent to email. Please verify your account." });
+      .json({
+        message:
+          "OTP đã được gửi tới tài khoản của bạn. Hãy xác minh tài khoản của bạn.",
+      });
   } catch (error) {
     next(error);
   }
@@ -611,7 +628,7 @@ export const verifySeller = async (
     const { email, otp, password, name, phone_number, country } = req.body;
 
     if (!email || !otp || !password || !name || !phone_number || !country) {
-      return next(new ValidationError("All fields are required!"));
+      return next(new ValidationError("Tất cả các trường đều bắt buộc!"));
     }
 
     const existingSeller = await prisma.sellers.findUnique({
@@ -638,7 +655,10 @@ export const verifySeller = async (
 
     res
       .status(201)
-      .json({ seller, message: "Seller registered successfully!" });
+      .json({
+        seller,
+        message: "Đăng ký trở thành người bán hàng thành công!",
+      });
   } catch (error) {
     next(error);
   }
@@ -655,7 +675,7 @@ export const createShop = async (
       req.body;
 
     if (!name || !bio || !address || !sellerId || !opening_hours || !category) {
-      return next(new ValidationError("All fields are required!"));
+      return next(new ValidationError("Tất cả các trường đều bắt buộc!"));
     }
 
     const shopData: any = {
@@ -693,7 +713,8 @@ export const createStripeConnectLink = async (
   try {
     const { sellerId } = req.body;
 
-    if (!sellerId) return next(new ValidationError("Seller ID is required!"));
+    if (!sellerId)
+      return next(new ValidationError("ID người bán không được để trống!"));
 
     const seller = await prisma.sellers.findUnique({
       where: {
@@ -702,7 +723,7 @@ export const createStripeConnectLink = async (
     });
 
     if (!seller) {
-      return next(new ValidationError("Seller is not available with this id!"));
+      return next(new ValidationError("Người bán không khả dụng với ID này!"));
     }
 
     const account = await stripe.accounts.create({
@@ -747,15 +768,18 @@ export const loginSeller = async (
     const { email, password } = req.body;
 
     if (!email || !password)
-      return next(new ValidationError("Email and password are required!"));
+      return next(
+        new ValidationError("Email và mật khẩu không được để trống!")
+      );
 
     const seller = await prisma.sellers.findUnique({ where: { email } });
-    if (!seller) return next(new ValidationError("Invalid email or password!"));
+    if (!seller)
+      return next(new ValidationError("Email hoặc mật khẩu không đúng!"));
 
     // Verify password
     const isMatch = await bcrypt.compare(password, seller.password!);
     if (!isMatch)
-      return next(new ValidationError("Invalid email or password!"));
+      return next(new ValidationError("Email hoặc mật khẩu không đúng!"));
 
     res.clearCookie("access_token");
     res.clearCookie("refresh_token");
@@ -777,7 +801,7 @@ export const loginSeller = async (
     setCookie(res, "seller-access-token", accessToken);
 
     res.status(200).json({
-      message: "Login successful!",
+      message: "Đăng nhập thành công!",
       seller: { id: seller.id, email: seller.email, name: seller.name },
     });
   } catch (error) {
@@ -834,7 +858,7 @@ export const addUserAddress = async (
     const { label, name, street, city, zip, country, isDefault } = req.body;
 
     if (!label || !name || !street || !city || !zip || !country) {
-      return next(new ValidationError("All fields are required"));
+      return next(new ValidationError("Tất cả các trường đều bắt buộc"));
     }
 
     if (isDefault) {
@@ -882,7 +906,7 @@ export const deleteUserAddress = async (
     const { addressId } = req.params;
 
     if (!addressId) {
-      return next(new ValidationError("Address ID is required"));
+      return next(new ValidationError("ID địa chỉ không được để trống"));
     }
 
     const existingAddress = await prisma.address.findFirst({
@@ -893,7 +917,9 @@ export const deleteUserAddress = async (
     });
 
     if (!existingAddress) {
-      return next(new NotFoundError("Address not found or unauthorized"));
+      return next(
+        new NotFoundError("Địa chỉ không tồn tại hoặc không được phép")
+      );
     }
 
     await prisma.address.delete({
@@ -904,7 +930,7 @@ export const deleteUserAddress = async (
 
     res.status(200).json({
       success: true,
-      message: "Address deleted successfully",
+      message: "Đã xóa địa chỉ thành công",
     });
   } catch (error) {
     return next(error);

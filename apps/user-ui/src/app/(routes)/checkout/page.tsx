@@ -24,7 +24,7 @@ const Page = () => {
   useEffect(() => {
     const fetchSessionAndClientSecret = async () => {
       if (!sessionId) {
-        setError("Invalid session. Please try again.");
+        setError("Phiên làm việc không hợp lệ. Vui lòng thử lại!");
         setLoading(false);
         return;
       }
@@ -45,7 +45,7 @@ const Page = () => {
           totalAmount === undefined ||
           totalAmount === null
         ) {
-          throw new Error("Invalid payment session data.");
+          throw new Error("Dữ liệu phiên thanh toán không hợp lệ.");
         }
 
         setCartItems(cart);
@@ -68,7 +68,7 @@ const Page = () => {
         setClientSecret(intentRes.data.clientSecret);
       } catch (err: any) {
         console.error(err);
-        setError("Something went wrong while preparing your payment.");
+        setError("Có lỗi xảy ra trong khi chuẩn bị thanh toán của bạn.");
       } finally {
         setLoading(false);
       }
@@ -97,17 +97,17 @@ const Page = () => {
             <XCircle className="text-red-500 w-10 h-10" />
           </div>
           <h2 className="text-xl font-semibold text-red-600 mb-2">
-            Payment Failed
+            Thanh toán thất bại
           </h2>
           <p className="text-sm text-gray-600 mb-6">
-            {error} <br className="hidden sm:block" /> Please go back and try
-            checking out again.
+            {error} <br className="hidden sm:block" /> Vui lòng quay lại và thử
+            thanh toán lại.
           </p>
           <button
             onClick={() => router.push("/cart")}
             className="bg-blue-600 text-white px-5 py-2 rounded-md hover:bg-blue-700 transition text-sm font-medium"
           >
-            Back to Cart
+            Quay lại Giỏ hàng
           </button>
         </div>
       </div>

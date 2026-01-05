@@ -107,20 +107,19 @@ const SellerProfile = ({
     },
   });
 
-   useEffect(() => {
-      if (!isLoading) {
-        if (!location || !deviceInfo || !user?.id) return;
-        sendKafkaEvent({
-          userId: user?.id,
-          shopId: shop?.id,
-          action: "shop_visit",
-          country: location?.country || "Unknown",
-          city: location?.city || "Unknown",
-          device: deviceInfo || "Unknown Device",
-        });
-      }
-    }, [location, deviceInfo, isLoading]);
-  
+  useEffect(() => {
+    if (!isLoading) {
+      if (!location || !deviceInfo || !user?.id) return;
+      sendKafkaEvent({
+        userId: user?.id,
+        shopId: shop?.id,
+        action: "shop_visit",
+        country: location?.country || "Unknown",
+        city: location?.city || "Unknown",
+        device: deviceInfo || "Unknown Device",
+      });
+    }
+  }, [location, deviceInfo, isLoading]);
 
   return (
     <div>
@@ -157,7 +156,7 @@ const SellerProfile = ({
                 {shop?.name}
               </h1>
               <p className="text-slate-800 text-sm mt-1">
-                {shop?.bio || "No bio available."}
+                {shop?.bio || "Không có thông tin tiểu sử nào khả dụng."}
               </p>
 
               <div className="flex items-center gap-4 mt-2">
@@ -166,7 +165,7 @@ const SellerProfile = ({
                   <span>{shop?.ratings || "N/A"}</span>
                 </div>
                 <div className="flex items-center text-slate-700 gap-1">
-                  <Users size={18} /> <span>{followers} Followers</span>
+                  <Users size={18} /> <span>{followers} Người theo dõi</span>
                 </div>
               </div>
 
@@ -177,7 +176,9 @@ const SellerProfile = ({
 
               <div className="flex items-center gap-2 mt-3 text-slate-700">
                 <MapPin size={18} />{" "}
-                <span>{shop?.address || "No address provided"}</span>
+                <span>
+                  {shop?.address || "Không có địa chỉ nào được cung cấp"}
+                </span>
               </div>
             </div>
             <button
@@ -190,18 +191,20 @@ const SellerProfile = ({
               disabled={toggleFollowMutation.isPending}
             >
               <Heart size={18} />
-              {isFollowing ? "Unfollow" : "Follow"}
+              {isFollowing ? "Hủy theo dõi" : "Theo dõi"}
             </button>
           </div>
         </div>
 
         <div className="bg-gray-200 p-6 rounded-lg shadow-lg w-full lg:w-[30%]">
-          <h2 className="text-xl font-semibold text-slate-900">Shop Details</h2>
+          <h2 className="text-xl font-semibold text-slate-900">
+            Thông tin Shop
+          </h2>
 
           <div className="flex items-center gap-3 mt-3 text-slate-700">
             <Calendar size={18} />
             <span>
-              Joined At: {new Date(shop?.createdAt!).toLocaleDateString()}
+              Tham gia lúc: {new Date(shop?.createdAt!).toLocaleDateString()}
             </span>
           </div>
 
@@ -219,7 +222,9 @@ const SellerProfile = ({
 
           {shop?.socialLinks && shop?.socialLinks.length > 0 && (
             <div className="mt-3">
-              <h3 className="text-slate-700 text-lg font-medium">Follow Us:</h3>
+              <h3 className="text-slate-700 text-lg font-medium">
+                Theo dõi chúng tôi:
+              </h3>
               <div className="flex gap-3 mt-2">
                 {shop?.socialLinks?.map((link: any, index: number) => (
                   <a
@@ -276,7 +281,7 @@ const SellerProfile = ({
                 <ProductCard key={product.id} product={product} />
               ))}
               {products?.length === 0 && (
-                <p className="py-2">No products available yet!</p>
+                <p className="py-2">Không có sản phẩm nào!</p>
               )}
             </div>
           )}
@@ -300,13 +305,13 @@ const SellerProfile = ({
                 />
               ))}
               {products?.length === 0 && (
-                <p className="py-2">No offers available yet!</p>
+                <p className="py-2">Không có sản phẩm nào!</p>
               )}
             </div>
           )}
           {activeTab === "Reviews" && (
             <div>
-              <p className="text-center py-5">No Reviews available yet!</p>
+              <p className="text-center py-5">Không có đánh giá nào!</p>
             </div>
           )}
         </div>

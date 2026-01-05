@@ -91,19 +91,19 @@ const Page = () => {
       <div className="w-[90%] lg:w-[80%] m-auto">
         <div className="pb-[50px]">
           <h1 className="md:pt-[40px] font-[500] text-[44px] leading-[1] mb-[14px] font-jost">
-            All Offers
+            Tất cả khuyến mãi
           </h1>
           <Link href="/" className="text-[#55585b] hover:underline">
-            Home
+            Trang chủ
           </Link>
           <span className="inline-block p-[1.5px] mx-1 bg-[#a8acb0] rounded-full"></span>
-          <span className="text-[#55585b]">All Offers</span>
+          <span className="text-[#55585b]">Tất cả khuyến mãi</span>
         </div>
 
         <div className="w-full flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
           <aside className="w-full lg:w-[270px] !rounded bg-white p-4 space-y-6 shadow-md">
-            <h3 className="text-xl font-Poppins font-medium">Price Filter</h3>
+            <h3 className="text-xl font-Poppins font-medium">Bộ lọc giá</h3>
             <div className="ml-2">
               <Range
                 step={1}
@@ -152,7 +152,7 @@ const Page = () => {
             <div className="mt-4 flex items-center justify-between gap-4 rounded-xl border border-orange-100 bg-white/80 backdrop-blur px-4 py-3 shadow-sm">
               <div className="flex flex-col">
                 <span className="text-[11px] uppercase tracking-wide text-orange-400">
-                  Price range
+                  Khoảng giá
                 </span>
                 <span className="text-sm font-semibold text-gray-800">
                   ${tempPriceRange[0]}
@@ -167,7 +167,7 @@ const Page = () => {
                 }}
                 className="relative overflow-hidden rounded-lg bg-gradient-to-r from-orange-500 to-orange-600 px-5 py-2 text-sm font-semibold text-white shadow-md transition-all duration-300 hover:from-orange-600 hover:to-orange-700 hover:shadow-lg active:scale-95 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-offset-2"
               >
-                <span className="relative z-10">Apply</span>
+                <span className="relative z-10">Áp dụng</span>
 
                 {/* shine effect */}
                 <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-700 hover:translate-x-full" />
@@ -176,11 +176,11 @@ const Page = () => {
 
             {/* Categories */}
             <h3 className="text-xl font-Poppins font-medium border-b border-b-slate-300 pb-1">
-              Categories
+              Danh mục
             </h3>
             <ul className="space-y-2 !mt-3">
               {isLoading ? (
-                <p>Loading...</p>
+                <p>Đang tải...</p>
               ) : (
                 data?.categories?.map((category: any) => (
                   <li
@@ -203,7 +203,7 @@ const Page = () => {
 
             {/* Sizes */}
             <h3 className="text-xl font-Poppins font-medium border-b border-b-slate-300 pb-1 mt-6">
-              Filter by Size
+              Bộ lọc kích thước
             </h3>
             <ul className="space-y-2 !mt-3">
               {sizes.map((size) => (

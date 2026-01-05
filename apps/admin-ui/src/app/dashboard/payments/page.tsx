@@ -30,7 +30,7 @@ const PaymentsTable = () => {
     () => [
       {
         accessorKey: "id",
-        header: "Order ID",
+        header: "ID đơn hàng",
         cell: ({ row }: any) => (
           <span className="text-white text-sm truncate">
             #{row.original.id.slice(-6).toUpperCase()}

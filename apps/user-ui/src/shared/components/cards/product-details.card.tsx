@@ -147,7 +147,7 @@ const ProductDetailsCard = ({
                   {/* Shop Location */}
                   <p className="text-gray-600 mt-1 flex items-center gap-1 text-sm">
                     <MapPin size={20} />{" "}
-                    {productDetails?.Shop?.address || "Location Not Available"}
+                    {productDetails?.Shop?.address || "Vị trí không khả dụng"}
                   </p>
                 </div>
               </div>
@@ -157,7 +157,7 @@ const ProductDetailsCard = ({
                 className="flex cursor-pointer items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 ease-in-out transform hover:scale-105 hover:shadow-md"
                 onClick={() => handleChat()}
               >
-                💬 Chat with Seller
+                💬 Nhắn tin với người bán
               </button>
             </div>
             <h3 className="text-xl font-semibold mt-3">
@@ -169,7 +169,7 @@ const ProductDetailsCard = ({
             {/* Brand */}
             {productDetails?.brand && (
               <p className="mt-2">
-                <strong>Brand:</strong> {productDetails.brand}
+                <strong>Thương hiệu:</strong> {productDetails.brand}
               </p>
             )}
             {/* Color & Size Selection */}
@@ -177,7 +177,7 @@ const ProductDetailsCard = ({
               {/* Size Options */}
               {productDetails?.sizes?.length > 0 && (
                 <div>
-                  <strong>Size:</strong>
+                  <strong>Kích thước:</strong>
                   <div className="flex gap-2 mt-1">
                     {productDetails.sizes.map((size: string, index: number) => (
                       <button
@@ -248,7 +248,7 @@ const ProductDetailsCard = ({
                 }`}
               >
                 <CartIcon size={18} />
-                Add to Cart
+                Thêm vào giỏ hàng
               </button>
               <button className="opacity-[.7] cursor-pointer">
                 <Heart
@@ -285,13 +285,13 @@ const ProductDetailsCard = ({
             </div>
             <div className="mt-3">
               {productDetails?.stock > 0 ? (
-                <span className="text-green-600 font-semibold">In Stock</span>
+                <span className="text-green-600 font-semibold">Còn hàng</span>
               ) : (
-                <span className="text-red-600 font-semibold">Out of Stock</span>
+                <span className="text-red-600 font-semibold">Hết hàng</span>
               )}
             </div>{" "}
             <div className="mt-3 text-gray-600 text-sm">
-              Estimated Delivery:{" "}
+              Dự kiến giao hàng:{" "}
               <strong>{estimatedDelivery.toDateString()}</strong>
             </div>
           </div>

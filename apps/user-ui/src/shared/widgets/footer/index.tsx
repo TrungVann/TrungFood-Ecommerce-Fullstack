@@ -27,8 +27,9 @@ const Footer = () => {
           </h2>
 
           <p className="text-sm text-gray-500 mt-3 leading-relaxed">
-            Perfect ecommerce platform to start your business from scratch.
-            Discover fresh food, fast delivery and great deals every day.
+            Nền tảng thương mại điện tử hoàn hảo để bắt đầu công việc kinh doanh
+            của bạn từ con số không. Khám phá đa dạng món ăn mỗi ngày, giao hàng
+            nhanh chóng và các ưu đãi hấp dẫn mỗi ngày.
           </p>
 
           {/* SOCIAL */}
@@ -48,16 +49,16 @@ const Footer = () => {
         {/* MY ACCOUNT */}
         <div>
           <h4 className="text-sm font-semibold uppercase tracking-wide text-gray-900">
-            My Account
+            Tài khoản cảu tôi
           </h4>
           <ul className="mt-4 space-y-3 text-sm">
             {[
-              ["Track Orders", "/#"],
-              ["Shipping", "/#"],
-              ["Wishlist", "/wishlist"],
-              ["My Account", "/#"],
-              ["Order History", "/#"],
-              ["Returns", "/#"],
+              ["Theo dõi đơn hàng", "/#"],
+              ["Giao hàng", "/#"],
+              ["Danh sách yêu thích", "/wishlist"],
+              ["Tài khoản của tôi", "/#"],
+              ["Lịch sử đơn hàng", "/#"],
+              ["Trả hàng", "/#"],
             ].map(([label, link]) => (
               <li key={label}>
                 <Link
@@ -74,16 +75,16 @@ const Footer = () => {
         {/* INFORMATION */}
         <div>
           <h4 className="text-sm font-semibold uppercase tracking-wide text-gray-900">
-            Information
+            Thông tin liên hệ
           </h4>
           <ul className="mt-4 space-y-3 text-sm">
             {[
-              ["Our Story", "/#"],
-              ["Careers", "/#"],
-              ["Privacy Policy", "/#"],
-              ["Terms & Conditions", "/#"],
-              ["Latest News", "/#"],
-              ["Contact Us", "/#"],
+              ["Câu chuyện của chúng tôi", "/#"],
+              ["Công việc", "/#"],
+              ["Chính sách bảo mật", "/#"],
+              ["Điều khoản & Điều kiện", "/#"],
+              ["Tin tức mới nhất", "/#"],
+              ["Liên hệ với chúng tôi", "/#"],
             ].map(([label, link]) => (
               <li key={label}>
                 <Link
@@ -100,10 +101,12 @@ const Footer = () => {
         {/* CONTACT */}
         <div>
           <h4 className="text-sm font-semibold uppercase tracking-wide text-gray-900">
-            Talk To Us
+            Liên hệ với chúng tôi
           </h4>
 
-          <p className="text-sm text-gray-500 mt-4">Got questions? Call us</p>
+          <p className="text-sm text-gray-500 mt-4">
+            Bạn có thắc mắc? Liên hệ cho chúng tôi
+          </p>
           <p className="text-xl font-bold text-gray-900 mt-1">
             +84 0368 701 680
           </p>

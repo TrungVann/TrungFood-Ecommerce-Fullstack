@@ -49,11 +49,11 @@ const Page = () => {
       <div className="my-4">
         <div className="flex items-center justify-between text-xs font-medium text-gray-500 mb-2">
           {[
-            "Ordered",
-            "Packed",
-            "Shipped",
-            "Out for Delivery",
-            "Delivered",
+            "Đã đặt hàng",
+            "Đã đóng gói",
+            "Đã giao cho vận chuyển",
+            "Đang giao hàng",
+            "Đã giao hàng thành công",
           ].map((step, idx) => {
             const current =
               step.toLowerCase() ===
@@ -61,11 +61,11 @@ const Page = () => {
             const passed =
               idx <=
               [
-                "Ordered",
-                "Packed",
-                "Shipped",
-                "Out for Delivery",
-                "Delivered",
+                "Đã đặt hàng",
+                "Đã đóng gói",
+                "Đã giao cho vận chuyển",
+                "Đang giao hàng",
+                "Đã giao hàng thành công",
               ].findIndex(
                 (s) =>
                   s.toLowerCase() ===
@@ -89,20 +89,20 @@ const Page = () => {
         </div>
         <div className="flex items-center">
           {[
-            "Ordered",
-            "Packed",
-            "Shipped",
-            "Out for Delivery",
-            "Delivered",
+            "Đã đặt hàng",
+            "Đã đóng gói",
+            "Đã giao cho vận chuyển",
+            "Đang giao hàng",
+            "Đã giao hàng thành công",
           ].map((step, idx) => {
             const isReached =
               idx <=
               [
-                "Ordered",
-                "Packed",
-                "Shipped",
-                "Out for Delivery",
-                "Delivered",
+                "Đã đặt hàng",
+                "Đã đóng gói",
+                "Đã giao cho vận chuyển",
+                "Đang giao hàng",
+                "Đã giao hàng thành công",
               ].findIndex(
                 (s) =>
                   s.toLowerCase() ===
@@ -131,18 +131,18 @@ const Page = () => {
       {/* Summary Info */}
       <div className="mb-6 space-y-1 text-sm text-gray-700">
         <p>
-          <span className="font-semibold">Payment Status:</span>{" "}
+          <span className="font-semibold">Trạng thái thanh toán:</span>{" "}
           <span className="text-green-600 font-medium">{order.status}</span>
         </p>
 
         <p>
-          <span className="font-semibold">Total Paid:</span>{" "}
+          <span className="font-semibold">Tổng đã thanh toán:</span>{" "}
           <span className="font-medium">${order.total.toFixed(2)}</span>
         </p>
 
         {order.discountAmount > 0 && (
           <p>
-            <span className="font-semibold">Discount Applied:</span>{" "}
+            <span className="font-semibold">Áp dụng giảm giá:</span>{" "}
             <span className="text-green-700">
               -${order.discountAmount.toFixed(2)} (
               {order.couponCode?.discountType === "percentage"
@@ -155,7 +155,7 @@ const Page = () => {
 
         {order.couponCode && (
           <p>
-            <span className="font-semibold">Coupon:</span>{" "}
+            <span className="font-semibold">Mã giảm giá:</span>{" "}
             <span className="text-blue-700">
               {order.couponCode.public_name}
             </span>
@@ -163,7 +163,7 @@ const Page = () => {
         )}
 
         <p>
-          <span className="font-semibold">Date:</span>{" "}
+          <span className="font-semibold">Ngày:</span>{" "}
           {new Date(order.createdAt).toLocaleDateString()}
         </p>
       </div>
@@ -171,7 +171,7 @@ const Page = () => {
       {/* Shipping Info */}
       {order.shippingAddress && (
         <div className="mb-6 text-sm text-gray-700">
-          <h2 className="text-md font-semibold mb-2">Shipping Address</h2>
+          <h2 className="text-md font-semibold mb-2">Địa chỉ giao hàng</h2>
           <p>{order.shippingAddress.name}</p>
           <p>
             {order.shippingAddress.street}, {order.shippingAddress.city},{" "}
@@ -184,7 +184,7 @@ const Page = () => {
       {/* Order Items */}
       <div>
         <h2 className="text-lg font-semibold text-gray-700 mb-4">
-          Order Items
+          Món hàng Đã Đặt
         </h2>
         <div className="space-y-4">
           {order.items.map((item: any) => (
@@ -202,7 +202,7 @@ const Page = () => {
                   {item.product?.title || "Unnamed Product"}
                 </p>
                 <p className="text-sm text-gray-600">
-                  Quantity: {item.quantity}
+                  Số lượng: {item.quantity}
                 </p>
                 {item.selectedOptions &&
                   Object.keys(item.selectedOptions).length > 0 && (

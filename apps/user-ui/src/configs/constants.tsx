@@ -1,22 +1,25 @@
 export const navItems: NavItemsTypes[] = [
   {
-    title: "Home",
+    title: "Trang chủ",
     href: "/",
   },
   {
-    title: "Products",
+    title: "Sản phẩm",
     href: "/products",
   },
   {
-    title: "Shops",
+    title: "Cửa hàng",
     href: "/shops",
   },
   {
-    title: "Offers",
+    title: "Khuyến mãi",
     href: "/offers",
   },
   {
-    title: "Become A Seller",
-    href: `${process.env.NEXT_PUBLIC_SELLER_SERVER_URI || "https://seller.shondhane.com"}/signup`,
+    title: "Trở thành người bán",
+    href: `${
+      process.env.NEXT_PUBLIC_SELLER_SERVER_URI ||
+      "https://seller.shondhane.com"
+    }/signup`,
   },
 ];

@@ -19,11 +19,11 @@ export const validateRegistrationData = (
     !password ||
     (userType === "seller" && (!phone_number || !country))
   ) {
-    throw new ValidationError(`Missing required fields!`);
+    throw new ValidationError(`Thiếu các trường bắt buộc!`);
   }
 
   if (!emailRegex.test(email)) {
-    throw new ValidationError("Invalid email format!");
+    throw new ValidationError("Không đúng định dạng email!");
   }
 };
 
@@ -33,18 +33,16 @@ export const checkOtpRestrictions = async (
 ) => {
   if (await redis.get(`otp_lock:${email}`)) {
     throw new ValidationError(
-      "Account locked due to multiple failed attempts! Try again after 30 minutes"
+      "Tài khoản bị khóa do nhiều lần nhập sai! Vui lòng thử lại sau 30 phút"
     );
   }
   if (await redis.get(`otp_spam_lock:${email}`)) {
     throw new ValidationError(
-      "Too many OTP requests! Please wait 1 hour before requesting again."
+      "Quá nhiều yêu cầu OTP! Vui lòng đợi 1 giờ trước khi yêu cầu lại."
     );
   }
   if (await redis.get(`otp_cooldown:${email}`)) {
-    throw new ValidationError(
-      "Please wait 1 minute before requesting a new OTP!"
-    );
+    throw new ValidationError("Vui lòng đợi 1 phút trước khi yêu cầu OTP mới!");
   }
 };
 
@@ -56,7 +54,7 @@ export const trackOtpRequests = async (email: string, next: NextFunction) => {
     await redis.set(`otp_spam_lock:${email}`, "locked", "EX", 3600); // Lock for 1hour
 
     throw new ValidationError(
-      "Too many OTP requests. Please wait 1 hour before requesting again."
+      "Quá nhiều yêu cầu OTP! Vui lòng đợi 1 giờ trước khi yêu cầu lại."
     );
   }
 
@@ -81,7 +79,7 @@ export const verifyOtp = async (
 ) => {
   const storedOtp = await redis.get(`otp:${email}`);
   if (!storedOtp) {
-    throw new ValidationError("Invalid or expired OTP!");
+    throw new ValidationError("OTP không hợp lệ hoặc hết hạn!");
   }
 
   const failedAttemptsKey = `otp_attempts:${email}`;
@@ -92,12 +90,12 @@ export const verifyOtp = async (
       await redis.set(`otp_lock:${email}`, "locked", "EX", 1800); // Lock for 30 minutes
       await redis.del(`otp:${email}`, failedAttemptsKey);
       throw new ValidationError(
-        "Too many failed attempts. Your account is locked for 30 minutes!"
+        "Quá nhiều lần thử sai. Tài khoản của bạn bị khóa trong 30 phút!"
       );
     }
     await redis.set(failedAttemptsKey, failedAttempts + 1, "EX", 300);
     throw new ValidationError(
-      `Incorrect OTP. ${2 - failedAttempts} attempts left.`
+      `Không đúng OTP. ${2 - failedAttempts} lần thử lại nữa.`
     );
   }
 
@@ -113,7 +111,7 @@ export const handleForgotPassword = async (
   try {
     const { email } = req.body;
 
-    if (!email) throw new ValidationError("Email is required!");
+    if (!email) throw new ValidationError("Email không được để trống!");
 
     // Find user/seller in DB
     const user =
@@ -121,7 +119,7 @@ export const handleForgotPassword = async (
         ? await prisma.users.findUnique({ where: { email } })
         : await prisma.sellers.findUnique({ where: { email } });
 
-    if (!user) throw new ValidationError(`${userType} not found!`);
+    if (!user) throw new ValidationError(`${userType} không tìm thấy!`);
 
     // Check otp restrictions
     await checkOtpRestrictions(email, next);
@@ -138,7 +136,10 @@ export const handleForgotPassword = async (
 
     res
       .status(200)
-      .json({ message: "OTP sent to email. Please verify your account." });
+      .json({
+        message:
+          "OTP đã được gửi đến email. Vui lòng xác minh tài khoản của bạn.",
+      });
   } catch (error) {
     next(error);
   }
@@ -151,14 +152,13 @@ export const verifyForgotPasswordOtp = async (
 ) => {
   try {
     const { email, otp } = req.body;
-    if (!email || !otp)
-      throw new ValidationError("Email and OTP are required!");
+    if (!email || !otp) throw new ValidationError("Email và OTP là bắt buộc!");
 
     await verifyOtp(email, otp, next);
 
     res
       .status(200)
-      .json({ message: "OTP verified. You can now reset your password." });
+      .json({ message: "OTP đã được xác minh. Bạn có thể đặt lại mật khẩu." });
   } catch (error) {
     next(error);
   }

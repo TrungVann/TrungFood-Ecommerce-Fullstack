@@ -215,7 +215,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
             <div className="flex gap-2 mt-2 text-yellow-500">
               <Ratings rating={productDetails?.rating} />
               <Link href={"#reviews"} className="text-blue-500 hover:underline">
-                (0 Reviews)
+                (0 Đánh giá)
               </Link>
             </div>
 
@@ -256,7 +256,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
           <div className="py-2 border-b border-gray-200">
             <span className="text-gray-500">
-              Brand:{" "}
+              Thương hiệu:{" "}
               <span className="text-blue-500">
                 {productDetails?.brand || "No Brand"}
               </span>
@@ -279,7 +279,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 {/* Size Options */}
                 {productDetails?.sizes?.length > 0 && (
                   <div>
-                    <strong>Size:</strong>
+                    <strong>Kích thước:</strong>
                     <div className="flex gap-2 mt-1">
                       {productDetails.sizes.map(
                         (size: string, index: number) => (
@@ -329,15 +329,13 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 </div>
                 {productDetails?.stock > 0 ? (
                   <span className="text-green-600 font-semibold">
-                    In Stock{" "}
+                    Còn hàng{" "}
                     <span className="text-gray-500 font-medium">
-                      (Stock {productDetails?.stock})
+                      (Hàng tồn kho {productDetails?.stock})
                     </span>
                   </span>
                 ) : (
-                  <span className="text-red-600 font-semibold">
-                    Out of Stock
-                  </span>
+                  <span className="text-red-600 font-semibold">Hết hàng</span>
                 )}
               </div>
 
@@ -366,7 +364,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                 }}
               >
                 <CartIcon size={18} />
-                Add to Cart
+                Thêm vào giỏ hàng
               </button>
             </div>
           </div>
@@ -376,7 +374,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         <div className="bg-[#fafafa] -mt-6">
           <div className="mb-1 p-3 border-b border-b-gray-100">
             <span className="text-sm font-medium text-gray-600">
-              Delivery Option
+              Tùy chọn giao hàng
             </span>
             <div className="flex items-center text-gray-600 gap-1">
               <MapPin size={18} className="text-orange-500 shrink-0" />
@@ -388,18 +386,18 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
           <div className="mb-1 px-3 pb-1 border-b border-b-gray-100">
             <span className="text-sm font-medium text-gray-600">
-              Food Safety & Policy
+              An toàn Thực phẩm & Chính sách
             </span>
             <div className="flex items-center text-gray-600 gap-1">
               <Package size={18} className="text-green-500 shrink-0" />
               <span className="text-base font-normal">
-                Freshly prepared • Same-day delivery
+                Chế biến mới • Giao hàng trong ngày
               </span>
             </div>
             <div className="flex items-center py-2 text-gray-600 gap-1">
               <WalletMinimal size={18} className="text-orange-500 shrink-0" />
               <span className="text-base font-normal">
-                Refund if food is damaged or incorrect
+                Hoàn tiền nếu thực phẩm bị hỏng hoặc sai
               </span>
             </div>
           </div>
@@ -410,7 +408,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               <div className="flex items-center justify-between">
                 <div>
                   <span className="text-sm text-gray-600 font-light">
-                    Sold by
+                    Người bán
                   </span>
                   <span className="block max-w-[150px] truncate font-medium text-lg">
                     {productDetails?.Shop?.name}
@@ -422,7 +420,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                   className="text-blue-500 text-sm flex items-center gap-1"
                 >
                   <MessageSquareText />
-                  Chat Now
+                  Trò chuyện ngay
                 </Link>
               </div>
 
@@ -430,17 +428,19 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
               <div className="grid grid-cols-3 gap-2 border-t border-t-gray-200 mt-3 pt-3">
                 <div>
                   <p className="text-[12px] text-gray-500">
-                    Positive Seller Ratings
+                    Tỷ lệ Đánh giá Tích cực của Người bán
                   </p>
                   <p className="text-lg font-semibold">88%</p>
                 </div>
                 <div>
-                  <p className="text-[12px] text-gray-500">Ship on Time</p>
+                  <p className="text-[12px] text-gray-500">
+                    Giao hàng đúng giờ
+                  </p>
                   <p className="text-lg font-semibold">100%</p>
                 </div>
                 <div>
                   <p className="text-[12px] text-gray-500">
-                    Chat Response Rate
+                    Tỷ lệ Phản hồi Tin nhắn
                   </p>
                   <p className="text-lg font-semibold">100%</p>
                 </div>
@@ -452,7 +452,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
                   href={`/shop/${productDetails?.Shop.id}`}
                   className="inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-orange-600 transition-all hover:bg-orange-50 hover:text-orange-700 active:scale-95"
                 >
-                  Go to Store →
+                  Đi đến Cửa hàng →
                 </Link>
               </div>
             </div>
@@ -461,14 +461,11 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
       </div>
 
       <div className="w-[92%] lg:w-[80%] mx-auto mt-6">
-        <div
-          className="rounded-2xl bg-gradient-to-br from-white to-gray-50
-    p-6 shadow-sm"
-        >
+        <div className="rounded-2xl bg-gradient-to-br from-white to-gray-50 p-6 shadow-sm">
           {/* Header */}
           <div className="mb-5 border-b border-gray-200 pb-4">
             <h3 className="text-xl font-semibold text-gray-900">
-              Product Details
+              Chi tiết sản phẩm
             </h3>
             <p className="mt-1 text-sm text-gray-500">
               {productDetails?.title}
@@ -490,7 +487,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
           {/* Header */}
           <div className="flex items-center justify-between border-b border-gray-200 pb-4">
             <h3 className="text-xl font-semibold text-gray-900">
-              Ratings & Reviews
+              Đánh giá & Nhận xét
             </h3>
 
             <span className="text-sm text-gray-500">
@@ -500,24 +497,21 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
           {/* Empty state */}
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div
-              className="mb-5 flex h-20 w-20 items-center justify-center
-        rounded-full bg-orange-50"
-            >
+            <div className="mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-orange-50">
               ⭐
             </div>
 
             <h4 className="text-lg font-semibold text-gray-800">
-              No reviews yet
+              Chưa có đánh giá nào
             </h4>
 
             <p className="mt-2 max-w-md text-sm text-gray-500">
-              Be the first to review this product and help other customers make
-              better choices.
+              Hãy là người đầu tiên đánh giá sản phẩm này và giúp khách hàng
+              khác đưa ra lựa chọn tốt hơn.
             </p>
 
             <button className="mt-6 rounded-xl bg-orange-500 px-6 py-2.5 text-sm font-semibold text-white shadow-md transition-all hover:bg-orange-600 hover:shadow-lg active:scale-95">
-              Write a Review
+              Viết đánh giá
             </button>
           </div>
         </div>
@@ -525,7 +519,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
 
       <div className="w-[90%] lg:w-[80%] mx-auto">
         <div className="w-full h-full my-5 p-5">
-          <h3 className="text-xl font-semibold mb-2">You may also like</h3>
+          <h3 className="text-xl font-semibold mb-2">Bạn cũng có thể thích</h3>
           <div className="m-auto grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
             {recommendedProducts?.map((i: any) => (
               <ProductCard key={i.id} product={i} />

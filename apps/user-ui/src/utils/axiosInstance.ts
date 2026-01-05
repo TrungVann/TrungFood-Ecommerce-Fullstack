@@ -25,7 +25,7 @@ const handleLogout = () => {
   // Don't logout on payment-success page to prevent redirect loop
   if (currentPath === "/payment-success") {
     console.warn(
-      "Token expired on payment-success page, not logging out to prevent redirect loop"
+      "Mã xác thực đã hết hạn trên trang thanh toán thành công, không tự động đăng xuất để ngăn chặn vòng lặp chuyển hướng"
     );
     return;
   }

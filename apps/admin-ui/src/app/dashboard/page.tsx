@@ -54,19 +54,19 @@ const orders = [
 const columns = [
   {
     accessorKey: "id",
-    header: "Order ID",
+    header: "ID Đơn hàng",
   },
   {
     accessorKey: "customer",
-    header: "Customer",
+    header: "Khách hàng",
   },
   {
     accessorKey: "amount",
-    header: "Amount",
+    header: "Tổng",
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: "Trạng thái",
     cell: ({ getValue }: any) => {
       const value = getValue();
       const color =
@@ -90,7 +90,7 @@ const OrdersTable = () => {
   return (
     <div className="mt-6">
       <h2 className="text-white text-xl font-semibold mb-4">
-        Recent Orders
+        Đơn hàng hiện tại
         <span className="block text-sm text-slate-400 font-normal">
           A quick snapshot of your latest transactions.
         </span>

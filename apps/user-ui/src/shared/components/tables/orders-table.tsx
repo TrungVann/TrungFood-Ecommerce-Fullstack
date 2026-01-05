@@ -25,32 +25,32 @@ const OrdersTable = () => {
   const columns: ColumnDef<any>[] = [
     {
       accessorKey: "id",
-      header: "Order ID",
+      header: "ID Đơn hàng",
       cell: (info: any) => info.getValue()?.slice(-6),
     },
     {
       accessorKey: "status",
-      header: "Status",
+      header: "Trạng thái",
     },
     {
       accessorKey: "total",
-      header: "Total ($)",
+      header: "Tổng cộng ($)",
       cell: (info: any) => `$${info.getValue()?.toFixed(2)}`,
     },
     {
       accessorKey: "createdAt",
-      header: "Date",
+      header: "Ngày",
       cell: (info: any) => new Date(info.getValue())?.toLocaleDateString(),
     },
     {
       id: "actions",
-      header: "Actions",
+      header: "Hành động",
       cell: ({ row }) => (
         <button
           onClick={() => router.push(`/order/${row.original.id}`)}
           className="text-blue-600 hover:underline text-xs flex items-center gap-1"
         >
-          Track Order <ArrowUpRight className="w-3 h-3" />
+          Theo dõi đơn hàng <ArrowUpRight className="w-3 h-3" />
         </button>
       ),
     },
@@ -63,7 +63,7 @@ const OrdersTable = () => {
   });
 
   if (isLoading)
-    return <p className="text-sm text-gray-600">Loading orders...</p>;
+    return <p className="text-sm text-gray-600">Đang tải đơn hàng...</p>;
 
   return (
     <div className="overflow-x-auto">
@@ -106,7 +106,7 @@ const OrdersTable = () => {
 
       {data?.length === 0 && (
         <p className="text-center h-[30vh] items-center flex justify-center">
-          No orders available yet!
+          Không có đơn hàng nào!
         </p>
       )}
     </div>

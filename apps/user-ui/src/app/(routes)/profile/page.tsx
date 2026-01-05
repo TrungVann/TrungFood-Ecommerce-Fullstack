@@ -109,19 +109,19 @@ const Page = () => {
         {/* Profile Overview Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           <StatCard
-            title="Total Orders"
+            title="Tổng đơn hàng"
             count={totalOrders}
             Icon={Clock}
             color="orange"
           />
           <StatCard
-            title="Processing Orders"
+            title="Đơn hàng đang xử lý"
             count={processingOrders}
             Icon={Truck}
             color="blue"
           />
           <StatCard
-            title="Completed Orders"
+            title="Đơn hàng đã hoàn thành"
             count={completedOrders}
             Icon={CheckCircle}
             color="green"
@@ -134,43 +134,43 @@ const Page = () => {
           <div className="bg-white p-4 rounded-md shadow-sm border border-gray-100 w-full md:w-1/5">
             <nav className="space-y-2">
               <NavItem
-                label="Profile"
+                label="Hồ sơ cá nhân"
                 Icon={User}
                 active={activeTab === "Profile"}
                 onClick={() => setActiveTab("Profile")}
               />
               <NavItem
-                label="My Orders"
+                label="Đơn hàng của tôi"
                 Icon={ShoppingBag}
                 active={activeTab === "My Orders"}
                 onClick={() => setActiveTab("My Orders")}
               />
               <NavItem
-                label="Inbox"
+                label="Nhắn tin"
                 Icon={Inbox}
                 active={activeTab === "Inbox"}
                 onClick={() => router.push("/inbox")}
               />
               <NavItem
-                label="Notifications"
+                label="Thông báo"
                 Icon={Bell}
                 active={activeTab === "Notifications"}
                 onClick={() => setActiveTab("Notifications")}
               />
               <NavItem
-                label="Shipping Address"
+                label="Địa chỉ giao hàng"
                 Icon={MapPin}
                 active={activeTab === "Shipping Address"}
                 onClick={() => setActiveTab("Shipping Address")}
               />
               <NavItem
-                label="Change Password"
+                label="Đổi mật khẩu"
                 Icon={Lock}
                 active={activeTab === "Change Password"}
                 onClick={() => setActiveTab("Change Password")}
               />
               <NavItem
-                label="Logout"
+                label="Đăng xuất"
                 Icon={LogOut}
                 danger
                 onClick={() => logOutHandler()}
@@ -197,21 +197,21 @@ const Page = () => {
                     className="w-16 h-16 rounded-full border border-gray-200"
                   />
                   <button className="flex items-center gap-1 text-blue-500 text-xs font-medium">
-                    <Pencil className="w-4 h-4" /> Change Photo
+                    <Pencil className="w-4 h-4" /> Thay đổi ảnh đại diện
                   </button>
                 </div>
                 <p>
-                  <span className="font-semibold">Name:</span> {user.name}
+                  <span className="font-semibold">Tên:</span> {user.name}
                 </p>
                 <p>
                   <span className="font-semibold">Email:</span> {user.email}
                 </p>
                 <p>
-                  <span className="font-semibold">Joined:</span>{" "}
+                  <span className="font-semibold">Ngày tham gia:</span>{" "}
                   {new Date(user.createdAt).toLocaleDateString()}
                 </p>
                 <p>
-                  <span className="font-semibold">Earned Points:</span>{" "}
+                  <span className="font-semibold">Điểm tích lũy:</span>{" "}
                   {user.points || 0}
                 </p>
               </div>
@@ -224,7 +224,7 @@ const Page = () => {
             ) : activeTab === "Notifications" ? (
               <div className="space-y-4 text-sm text-gray-700">
                 {!notificationsLoading && notifications?.length === 0 && (
-                  <p>No Notifications available yet!</p>
+                  <p>Không có thông báo nào!</p>
                 )}
 
                 {!notificationsLoading && notifications?.length > 0 && (
@@ -262,7 +262,7 @@ const Page = () => {
                 )}
               </div>
             ) : (
-              <p>Not Found</p>
+              <p>Không tìm thấy</p>
             )}
           </div>
 
@@ -270,28 +270,28 @@ const Page = () => {
           <div className="w-full md:w-1/4 space-y-4">
             <QuickActionCard
               Icon={Gift}
-              title="Referral Program"
-              description="Invite friends and earn rewards."
+              title="Chương trình Giới thiệu"
+              description="Mời bạn bè và kiếm phần thưởng."
             />
             <QuickActionCard
               Icon={BadgeCheck}
-              title="Your Badges"
-              description="View your earned achievements."
+              title="Huy hiệu của bạn"
+              description="Xem các thành tựu bạn đã đạt được."
             />
             <QuickActionCard
               Icon={Settings}
-              title="Account Settings"
-              description="Manage preferences and security."
+              title="Cài đặt Tài khoản"
+              description="Quản lý tùy chọn và bảo mật."
             />
             <QuickActionCard
               Icon={Receipt}
-              title="Billing History"
-              description="Check your recent payments."
+              title="Lịch sử Thanh toán"
+              description="Kiểm tra các khoản thanh toán gần đây của bạn."
             />
             <QuickActionCard
               Icon={PhoneCall}
-              title="Support Center"
-              description="Need help? Contact support."
+              title="Trung tâm Hỗ trợ"
+              description="Cần trợ giúp? Liên hệ với bộ phận hỗ trợ."
             />
           </div>
         </div>

@@ -12,6 +12,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-02-24.acacia",
 });
 
+// Exchange rate: 1 USD = 236000 VND
+const USD_TO_VND_RATE = 26000;
+
 // create payment intent
 export const createPaymentIntent = async (
   req: any,
@@ -26,7 +29,7 @@ export const createPaymentIntent = async (
     sessionId,
   });
 
-  const customerAmount = Math.round(amount * 100);
+  const customerAmount = Math.round(amount * USD_TO_VND_RATE);
   const platformFee = Math.floor(customerAmount * 0.1);
 
   console.log(sellerStripeAccountId);
@@ -34,7 +37,7 @@ export const createPaymentIntent = async (
   try {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: customerAmount,
-      currency: "usd",
+      currency: "vnd",
       payment_method_types: ["card"],
 
       //bắt buộc khi connected account khác region
@@ -139,10 +142,15 @@ export const createPaymentSession = async (
       stripeAccountId: shop?.sellers?.stripeId,
     }));
 
-    // calculate total
+    // calculate total in VND
     const totalAmount = cart.reduce((total: number, item: any) => {
-      return total + item.quantity * item.sale_price;
+      return total + item.quantity * item.sale_price * USD_TO_VND_RATE;
     }, 0);
+
+    // apply discount if coupon
+    const discountedTotal = coupon
+      ? totalAmount - parseFloat(coupon.discountAmount)
+      : totalAmount;
 
     // create session payload
     const sessionId = crypto.randomUUID();
@@ -151,7 +159,8 @@ export const createPaymentSession = async (
       userId,
       cart,
       sellers: sellerData,
-      totalAmount,
+      totalAmount: discountedTotal,
+      originalTotal: totalAmount, // Add original total for proportional discount
       shippingAddressId: selectedAddressId || null,
       coupon: coupon || null,
     };
@@ -236,7 +245,12 @@ export const createOrder = async (
       const sessionId = paymentIntent.metadata.sessionId;
       const userId = paymentIntent.metadata.userId;
 
-      console.log("Payment succeeded for sessionId:", sessionId, "userId:", userId);
+      console.log(
+        "Payment succeeded for sessionId:",
+        sessionId,
+        "userId:",
+        userId
+      );
 
       const sessionKey = `payment-session:${sessionId}`;
       const sessionData = await redis.get(sessionKey);
@@ -250,7 +264,7 @@ export const createOrder = async (
 
       console.log("Session data found, creating order...");
 
-      const { cart, totalAmount, shippingAddressId, coupon } =
+      const { cart, totalAmount, originalTotal, shippingAddressId, coupon } =
         JSON.parse(sessionData);
 
       const user = await prisma.users.findUnique({ where: { id: userId } });
@@ -267,29 +281,15 @@ export const createOrder = async (
         const orderItems = shopGrouped[shopId];
 
         let orderTotal = orderItems.reduce(
-          (sum: number, p: any) => sum + p.quantity * p.sale_price,
+          (sum: number, p: any) =>
+            sum + p.quantity * p.sale_price * USD_TO_VND_RATE,
           0
         );
-        // Apply discount if applicable
-        if (
-          coupon &&
-          coupon.discountedProductId &&
-          orderItems.some((item: any) => item.id === coupon.discountedProductId)
-        ) {
-          const discountedItem = orderItems.find(
-            (item: any) => item.id === coupon.discountedProductId
-          );
-          if (discountedItem) {
-            const discount =
-              coupon.discountPercent > 0
-                ? (discountedItem.sale_price *
-                    discountedItem.quantity *
-                    coupon.discountPercent) /
-                  100
-                : coupon.discountAmount;
-
-            orderTotal -= discount;
-          }
+        // Apply discount proportionally if applicable
+        if (coupon && originalTotal > 0) {
+          const discountAmount = parseFloat(coupon.discountAmount) || 0;
+          const proportion = orderTotal / originalTotal;
+          orderTotal -= discountAmount * proportion;
         }
 
         // Create order
@@ -313,7 +313,12 @@ export const createOrder = async (
           },
         });
 
-        console.log("Order created successfully:", order.id, "for shop:", shopId);
+        console.log(
+          "Order created successfully:",
+          order.id,
+          "for shop:",
+          shopId
+        );
 
         // Update product & analytics
         for (const item of orderItems) {
@@ -382,9 +387,7 @@ export const createOrder = async (
           {
             name,
             cart,
-            totalAmount: coupon?.discountAmount
-              ? totalAmount - coupon?.discountAmount
-              : totalAmount,
+            totalAmount,
             trackingUrl: `/order/${order.id}`,
           }
         );
@@ -630,61 +633,31 @@ export const verifyCouponCode = async (
       return next(new ValidationError("Coupon code isn't valid!"));
     }
 
-    // Find the shop of the seller who created the discount
-    const shop = await prisma.shops.findUnique({
-      where: { sellerId: discount.sellerId },
-    });
-
-    console.log("Discount sellerId:", discount.sellerId);
-    console.log("Shop found:", shop);
-
-    if (!shop) {
-      return res.status(200).json({
-        valid: false,
-        discount: 0,
-        discountAmount: 0,
-        message: "No matching product found in cart for this coupon",
-      });
-    }
-
-    // Find matching product that belongs to the seller's shop
-    const matchingProduct = cart.find((item: any) => item.shopId === shop.id);
-
-    console.log(
-      "Cart items shopIds:",
-      cart.map((item: any) => item.shopId)
+    // Calculate total price of all items in cart in VND
+    const totalPrice = cart.reduce(
+      (sum: number, item: any) =>
+        sum + item.sale_price * item.quantity * USD_TO_VND_RATE,
+      0
     );
-    console.log("Shop id:", shop.id);
-    console.log("Matching product:", matchingProduct);
-
-    if (!matchingProduct) {
-      return res.status(200).json({
-        valid: false,
-        discount: 0,
-        discountAmount: 0,
-        message: "No matching product found in cart for this coupon",
-      });
-    }
 
     let discountAmount = 0;
-    const price = matchingProduct.sale_price * matchingProduct.quantity;
 
     if (discount.discountType === "percentage") {
-      discountAmount = (price * discount.discountValue) / 100;
+      discountAmount = (totalPrice * discount.discountValue) / 100;
     } else if (discount.discountType === "flat") {
       discountAmount = discount.discountValue;
     }
 
     // Prevent discount from being greater than total price
-    discountAmount = Math.min(discountAmount, price);
+    discountAmount = Math.min(discountAmount, totalPrice);
 
     res.status(200).json({
       valid: true,
       discount: discount.discountValue,
       discountAmount: discountAmount.toFixed(2),
-      discountedProductId: matchingProduct.id,
       discountType: discount.discountType,
-      message: "Discount applied to 1 eligible product",
+      code: discount.discountCode,
+      message: "Discount applied to the entire order",
     });
   } catch (error) {
     next(error);

@@ -67,7 +67,7 @@ export const useStore = create<Store>()(
             cart: [...state.cart, { ...product, quantity: product?.quantity }],
           };
         });
-        // send kafka event
+        // gửi kafka event
         if (user?.id && location && deviceInfo) {
           sendKafkaEvent({
             userId: user?.id,
@@ -81,7 +81,7 @@ export const useStore = create<Store>()(
         }
       },
 
-      // remove from cart
+      // xóa khỏi giỏ hàng
       removeFromCart: (id, user, location, deviceInfo) => {
         // find the product before calling set
         const removeProduct = get().cart.find((item) => item.id === id);
@@ -90,7 +90,7 @@ export const useStore = create<Store>()(
           cart: state.cart?.filter((item) => item.id !== id),
         }));
 
-        // send kafka event
+        // gửi kafka event
         if (user?.id && location && deviceInfo && removeProduct) {
           sendKafkaEvent({
             userId: user?.id,
@@ -104,7 +104,7 @@ export const useStore = create<Store>()(
         }
       },
 
-      // Add to wishlist
+      // Thêm vào danh sách yêu thích
       addToWishlist: (product, user, location, deviceInfo) => {
         set((state) => {
           if (state.wishlist.find((item) => item.id === product.id))
@@ -112,7 +112,7 @@ export const useStore = create<Store>()(
           return { wishlist: [...state.wishlist, product] };
         });
 
-        // send kafka event
+        // gửi kafka event
         if (user?.id && location && deviceInfo) {
           sendKafkaEvent({
             userId: user?.id,
@@ -134,7 +134,7 @@ export const useStore = create<Store>()(
           wishlist: state.wishlist.filter((item) => item.id !== id),
         }));
 
-        // send kafka event
+        // gửi kafka event
         if (user?.id && location && deviceInfo && removeProduct) {
           sendKafkaEvent({
             userId: user?.id,

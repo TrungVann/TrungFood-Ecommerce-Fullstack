@@ -86,13 +86,13 @@
   <body>
     <div class="container">
       <div class="header">
-        <h1>🎉 Order Confirmed!</h1>
+        <h1>🎉 Xác nhận đơn hàng!</h1>
       </div>
       <div class="body">
-        <h2>Hi <%= name %>,</h2>
+        <h2>Xin chào <%= name %>,</h2>
         <p>
-          Thank you for your purchase! We’ve received your order and will start
-          processing it shortly.
+          Cảm ơn bạn đã mua hàng! Chúng tôi đã nhận được đơn hàng của bạn và sẽ
+          bắt đầu xử lý nó trong thời gian ngắn.
         </p>
 
         <div class="order-summary">
@@ -102,13 +102,16 @@
             item.sale_price.toFixed(2) %>
           </p>
           <% }) %>
-          <p class="total">Total: $<%= totalAmount.toFixed(2) %></p>
+          <p class="total">Tổng: $<%= totalAmount.toFixed(2) %></p>
         </div>
 
-        <a href="<%= trackingUrl %>" class="button">📦 Track Your Order</a>
+        <a href="<%= trackingUrl %>" class="button"
+          >📦 Theo dõi đơn hàng của bạn</a
+        >
 
         <p style="margin-top: 20px">
-          If you have any questions, just reply to this email or contact us at
+          Nếu bạn có bất kỳ câu hỏi nào, chỉ cần trả lời email này hoặc liên hệ
+          với chúng tôi tại
           <a href="mailto:support@trungfood.com">support@trungfood.com</a>.
         </p>
       </div>

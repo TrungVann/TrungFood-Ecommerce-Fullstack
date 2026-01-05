@@ -30,7 +30,7 @@ const OrdersTable = () => {
     () => [
       {
         accessorKey: "id",
-        header: "Order ID",
+        header: "ID Đơn hàng",
         cell: ({ row }: any) => (
           <span className="text-white text-sm truncate">
             #{row.original.id.slice(-6).toUpperCase()}

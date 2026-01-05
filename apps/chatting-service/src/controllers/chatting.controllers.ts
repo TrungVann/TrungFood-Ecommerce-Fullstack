@@ -1,3 +1,18 @@
+/**
+ * CONVERSATION CONTROLLERS
+ * 
+ * File này quản lý các chức năng chat/nhắn tin giữa Users (khách hàng) và Sellers (người bán)
+ * 
+ * Luồng hoạt động chính:
+ * 1. User khởi tạo cuộc hội thoại với Seller
+ * 2. Hệ thống tạo ConversationGroup và Participants tương ứng
+ * 3. Cả 2 bên có thể gửi/nhận tin nhắn trong cuộc hội thoại
+ * 4. Hỗ trợ: phân trang tin nhắn, đếm tin chưa đọc, kiểm tra trạng thái online
+ * 
+ * 
+ * 
+ */
+
 import {
   AuthError,
   NotFoundError,
