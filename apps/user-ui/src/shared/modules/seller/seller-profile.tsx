@@ -277,7 +277,7 @@ const SellerProfile = ({
                   ))}
                 </>
               )}
-              {products?.map((product: any) => (
+              {products?.filter((p: any) => !p?.isDeleted).map((product: any) => (
                 <ProductCard key={product.id} product={product} />
               ))}
               {products?.length === 0 && (
@@ -297,7 +297,7 @@ const SellerProfile = ({
                   ))}
                 </>
               )}
-              {events?.map((product: any) => (
+              {events?.filter((p: any) => !p?.isDeleted).map((product: any) => (
                 <ProductCard
                   isEvent={true}
                   key={product.id}

@@ -83,7 +83,7 @@ const Page = () => {
 
         {!isLoading && !isError && isLoggedIn && (
           <div className="m-auto grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 2xl:grid-cols-5 gap-5">
-            {products?.map((product: any) => (
+            {products?.filter((p: any) => !p?.isDeleted).map((product: any) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
@@ -109,7 +109,7 @@ const Page = () => {
         </div>
         {!LatestProductsLoading && (
           <div className="m-auto grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 2xl:grid-cols-5 gap-5">
-            {latestProducts?.map((product: any) => (
+            {latestProducts?.filter((p: any) => !p?.isDeleted).map((product: any) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>

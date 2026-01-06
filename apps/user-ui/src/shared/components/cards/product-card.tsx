@@ -102,16 +102,29 @@ const ProductCard = ({
 
       <div className="mt-3 flex justify-between items-center px-2">
         <div className="flex items-center gap-2">
-          <span className="text-lg font-bold text-gray-900">
-            ${(product?.sale_price * USD_TO_VND_RATE)?.toLocaleString("vi-VN")}₫
-          </span>
-          <span className="text-sm line-through text-gray-400">
-            $
-            {(product?.regular_price * USD_TO_VND_RATE)?.toLocaleString(
-              "vi-VN"
-            )}
-            ₫
-          </span>
+          {product?.starting_date ? (
+            <span className="text-lg font-bold text-gray-900">
+              {(product?.regular_price * USD_TO_VND_RATE)?.toLocaleString(
+                "vi-VN"
+              )}
+              ₫
+            </span>
+          ) : (
+            <>
+              <span className="text-lg font-bold text-gray-900">
+                {(product?.sale_price * USD_TO_VND_RATE)?.toLocaleString(
+                  "vi-VN"
+                )}
+                ₫
+              </span>
+              <span className="text-sm line-through text-gray-400">
+                {(product?.regular_price * USD_TO_VND_RATE)?.toLocaleString(
+                  "vi-VN"
+                )}
+                ₫
+              </span>
+            </>
+          )}
         </div>
         <span className="text-green-500 text-sm font-medium">
           {product.totalSales} đã bán

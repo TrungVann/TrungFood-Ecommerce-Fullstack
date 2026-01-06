@@ -521,7 +521,7 @@ const ProductDetails = ({ productDetails }: { productDetails: any }) => {
         <div className="w-full h-full my-5 p-5">
           <h3 className="text-xl font-semibold mb-2">Bạn cũng có thể thích</h3>
           <div className="m-auto grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
-            {recommendedProducts?.map((i: any) => (
+            {recommendedProducts?.filter((p: any) => !p?.isDeleted).map((i: any) => (
               <ProductCard key={i.id} product={i} />
             ))}
           </div>

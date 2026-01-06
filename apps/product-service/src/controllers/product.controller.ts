@@ -478,6 +478,7 @@ export const getAllProducts = async (
     const type = req.query.type;
 
     const baseFilter = {
+      isDeleted: false,
       OR: [
         {
           starting_date: null,
@@ -631,6 +632,7 @@ export const getFilteredProducts = async (
         lte: parsedPriceRange[1],
       },
       starting_date: null,
+      isDeleted: false,
     };
 
     if (categories && (categories as string[]).length > 0) {
@@ -708,6 +710,7 @@ export const getFilteredEvents = async (
       NOT: {
         starting_date: null,
       },
+      isDeleted: false,
     };
 
     if (categories && (categories as string[]).length > 0) {

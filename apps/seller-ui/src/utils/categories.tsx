@@ -33,3 +33,5 @@ export const categories = [
   { value: "halal", label: "Thực phẩm Halal" },
   { value: "gluten-free", label: "Thực phẩm Không chứa Gluten" },
 ];
+
+export const shopCategories = categories;

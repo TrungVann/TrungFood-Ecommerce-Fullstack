@@ -129,6 +129,18 @@ const ProductList = () => {
         ),
       },
       {
+        header: "Trạng thái",
+        cell: ({ row }: any) => (
+          <div>
+            {row.original.isDeleted ? (
+              <span className="text-yellow-400">Đang xóa</span>
+            ) : (
+              <span className="text-green-400">Hoạt động</span>
+            )}
+          </div>
+        ),
+      },
+      {
         header: "Actions",
         cell: ({ row }: any) => (
           <div className="flex gap-3">
