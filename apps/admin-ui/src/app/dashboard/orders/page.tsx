@@ -112,10 +112,12 @@ const OrdersTable = () => {
 
   return (
     <div className="w-full min-h-screen p-8">
-      <h2 className="text-2xl text-white font-semibold mb-2">All Orders</h2>
+      <h2 className="text-2xl text-white font-semibold mb-2">
+        Tất cả đơn hàng
+      </h2>
 
       {/* Breadcrumbs */}
-      <BreadCrumbs title="All Orders" />
+      <BreadCrumbs title="Tất cả đơn hàng" />
 
       {/* Search Bar */}
       <div className="my-4 flex items-center bg-gray-900 p-2 rounded-md flex-1">
